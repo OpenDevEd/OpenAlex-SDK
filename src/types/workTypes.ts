@@ -97,7 +97,7 @@ type Institution = {
   type?: string;
   lineage?: string[];
 };
-type Apc_payment = {
+export type Apc_payment = {
   value?: number;
   currency?: string;
   provenance?: string;
@@ -110,9 +110,18 @@ type LocationOpenAlex = {
   is_published?: boolean;
   landing_page_url?: string;
   license?: string;
-  source?: string;
+  source?: Source;
   pdf_url?: string;
   version?: string;
+};
+
+type Source = {
+  id: string;
+  display_name?: string;
+  issn_l?: string;
+  issn?: string[];
+  host_organization?: string;
+  type?: string;
 };
 
 type Biblio = {

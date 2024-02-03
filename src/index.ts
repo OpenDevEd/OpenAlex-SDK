@@ -85,13 +85,15 @@ class OpenAlex {
 
 const openAlex = new OpenAlex();
 (async () => {
+  // const res = await openAlex.work('10.53832/opendeved.1064');
   const res = await openAlex.works({
-    search: 'hassan mansour',
+    search: 'education',
+    searchField: 'title',
     perPage: 200,
     startPage: 2,
     endPage: 3,
-    fileName: 'test',
-    // retriveAllPages: true,
+    fileName: 'education',
+    retriveAllPages: false,
   });
-  console.log(res.results.length);
+  console.log(res);
 })();
