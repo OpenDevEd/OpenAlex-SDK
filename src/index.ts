@@ -5,7 +5,7 @@ import { SearchParameters, Work, Works } from './types/workTypes';
 import { GET } from './utils/http';
 import { appendPaginationToUrl, buildUrl, handleAllPages, handleMultiplePages, validateParameters } from './utils/works';
 
-class OpenAlex {
+export default class OpenAlex {
   email: string | null;
   apiKey: string | null;
   url: string = 'https://api.openalex.org';
@@ -38,12 +38,12 @@ class OpenAlex {
   }
 
   async works(searchParameters: SearchParameters = { perPage: 25, page: 1, retriveAllPages: false }): Promise<Works> {
-    const { retriveAllPages, searchField, search, fileName, startPage, endPage } = searchParameters;
+    const { retriveAllPages, searchField, search, fileName, startPage, endPage, filter } = searchParameters;
     let { perPage, page } = searchParameters;
 
     validateParameters(retriveAllPages, startPage, endPage, searchField);
 
-    let url = buildUrl(this.url, search, searchField);
+    let url = buildUrl(this.url, search, searchField, filter);
 
     if (retriveAllPages) {
       perPage = 200;
@@ -82,18 +82,3 @@ class OpenAlex {
     }
   }
 }
-
-const openAlex = new OpenAlex();
-(async () => {
-  // const res = await openAlex.work('10.53832/opendeved.1064');
-  const res = await openAlex.works({
-    search: 'education',
-    searchField: 'title',
-    perPage: 200,
-    startPage: 2,
-    endPage: 3,
-    fileName: 'education',
-    retriveAllPages: false,
-  });
-  console.log(res);
-})();

@@ -13,7 +13,7 @@ export type FilterParameters = {
   doi?: string;
   fulltext_origin?: string;
   grants?: Grants;
-  has_fulltext: boolean;
+  has_fulltext?: boolean;
   ids?: Ids;
   institutions_distinct_count?: number;
   is_paratext?: boolean;

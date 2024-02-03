@@ -1,3 +1,5 @@
+import { FilterParameters } from './filterParameters';
+
 export type WorkResult = Work | { error: number; message: string };
 
 export type Work = {
@@ -235,6 +237,7 @@ export interface SearchParameters {
   fileName?: string;
   startPage?: number;
   endPage?: number;
+  filter?: FilterParameters;
 }
 
 export type SeachField = 'abstract' | 'title' | 'title_and_abstract' | 'display_name' | 'fulltext';

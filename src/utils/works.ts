@@ -1,5 +1,6 @@
 import { AxiosResponse } from 'axios';
 import fs from 'fs';
+import { FilterParameters } from 'src/types/filterParameters';
 import { Works } from '../types/workTypes';
 import { GET } from './http';
 
@@ -13,7 +14,8 @@ export function validateParameters(retriveAllPages?: boolean, startPage?: number
     throw new Error(`Invalid search field: ${searchField}`);
 }
 
-export function buildUrl(baseUrl: string, search?: string, searchField?: string) {
+export function buildUrl(baseUrl: string, search?: string, searchField?: string, filter?: FilterParameters) {
+  console.log('filter', filter);
   let url = `${baseUrl}/works`;
   if (search && searchField) url = `${baseUrl}/works?filter=${searchField}.search:${search}`;
   if (search && !searchField) url = `${baseUrl}/works?search=${search}`;
@@ -39,6 +41,18 @@ export async function handleMultiplePages(startPage: number, endPage: number, ur
   if (fileName) fs.writeFileSync(`${fileName}.json`, JSON.stringify(works, null, 2));
   return works;
 }
+
+// function getPaths(obj, path = [], result = {}) {
+//   for (const key in obj) {
+//     const newPath = [...path, key];
+//     if (typeof obj[key] === 'object' && obj[key] !== null) {
+//       getPaths(obj[key], newPath, result);
+//     } else {
+//       result[newPath.join('.')] = obj[key];
+//     }
+//   }
+//   return result;
+// }
 
 export async function handleAllPages(url: string, initialResponse: AxiosResponse<Works>, fileName?: string) {
   const totalPages = calculatePages(200, initialResponse.data.meta.count);
