@@ -141,7 +141,7 @@ type CountsByYear = {
   year: number;
   count: number;
 };
-type KeyTypeOpenAlex =
+export type KeyTypeOpenAlex =
   | 'article'
   | 'book-chapter'
   | 'dissertation'
@@ -177,7 +177,7 @@ type KeyDisplayNameType =
   | 'letter'
   | 'edited-book';
 
-type TypeCrossRef =
+export type TypeCrossRef =
   | 'book-section'
   | 'monograph'
   | 'report-component'
