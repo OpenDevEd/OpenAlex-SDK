@@ -23,7 +23,6 @@ export function buildUrl(baseUrl: string, search?: string, searchField?: string,
   if (search && searchField) filterParams += `,${searchField}.search:${search}`;
   if (search && !searchField) SearchParams = `search=${search}`;
   if (searchField || filter) filterParams = `filter=${filterParams}`;
-  console.log(`${baseUrl}/works?${filterParams}&${SearchParams}`);
   return `${baseUrl}/works?${filterParams}&${SearchParams}`;
 }
 
