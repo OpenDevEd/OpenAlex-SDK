@@ -14,6 +14,7 @@ import OpenAlex from '../src/index';
       open_access: {
         oa_status: 'hybrid',
       },
+      s,
     },
   });
   console.log(res);

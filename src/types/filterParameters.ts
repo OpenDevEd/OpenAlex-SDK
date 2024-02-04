@@ -29,6 +29,30 @@ export type FilterParameters = {
   sustainable_development_goals?: Sustainable_development_goals;
   type?: KeyTypeOpenAlex;
   TypeCrossRef?: TypeCrossRef;
+  abstract?: Abstract;
+  authors_count?: number;
+  best_open_version?: 'any' | 'published' | 'acceptedOrPublished';
+  cited_by?: string;
+  cites?: string;
+  concepts_count?: number;
+  from_created_date?: string;
+  from_publication_date?: string;
+  from_updated_date?: string;
+  has_abstract?: boolean;
+  has_doi?: boolean;
+  has_oa_accepted_or_published_version?: boolean;
+  has_oa_submitted_version?: boolean;
+  has_orcid?: boolean;
+  has_pmcid?: boolean;
+  has_pmid?: boolean;
+  has_ngrams?: boolean;
+  has_references?: boolean;
+  journal?: string;
+  raw_affiliation_string?: Raw_affiliation_string;
+  related_to?: string;
+  repository?: string;
+  to_publication_date?: string;
+  version?: 'publishedVersion' | 'acceptedVersion' | 'submittedVersion' | 'null';
 };
 
 type Authorships = {
@@ -48,7 +72,9 @@ type Institution = {
   country_code?: string;
   lineage?: string[];
   ror?: string;
+  continent?: string;
   type?: string;
+  is_global_south?: boolean;
 };
 
 type LocationOpenAlexFilter = {
@@ -66,6 +92,9 @@ type Source = {
   is_in_doaj?: boolean;
   type?: string;
   host_organization?: string;
+  host_institution_lineage?: string;
+  publisher_lineage?: string;
+  has_issn?: boolean;
 };
 
 type Concept = {
@@ -96,4 +125,12 @@ type Open_access = {
 
 type Sustainable_development_goals = {
   id?: string;
+};
+
+type Abstract = {
+  search: string;
+};
+
+type Raw_affiliation_string = {
+  search: string;
 };
