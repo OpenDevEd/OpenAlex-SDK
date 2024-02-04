@@ -35,8 +35,17 @@ export type FilterParameters = {
   cited_by?: string;
   cites?: string;
   concepts_count?: number;
+  /**
+   * A string representing a date in the format "yyyy-mm-dd This field requires an OpenAlex Premium subscription".
+   */
   from_created_date?: string;
+  /**
+   * A string representing a date in the format "yyyy-mm-dd".
+   */
   from_publication_date?: string;
+  /**
+   * A string representing a date in the format "yyyy-mm-dd".
+   */
   from_updated_date?: string;
   has_abstract?: boolean;
   has_doi?: boolean;
@@ -51,6 +60,9 @@ export type FilterParameters = {
   raw_affiliation_string?: Raw_affiliation_string;
   related_to?: string;
   repository?: string;
+  /**
+   * A string representing a date in the format "yyyy-mm-dd".
+   */
   to_publication_date?: string;
   version?: 'publishedVersion' | 'acceptedVersion' | 'submittedVersion' | 'null';
 };

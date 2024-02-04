@@ -14,7 +14,8 @@ import OpenAlex from '../src/index';
       open_access: {
         oa_status: 'hybrid',
       },
-      s,
+      from_publication_date: '2020-01-01',
+      to_publication_date: '2021-01-01',
     },
   });
   console.log(res);
