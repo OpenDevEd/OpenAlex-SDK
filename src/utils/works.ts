@@ -16,10 +16,15 @@ export function validateParameters(retriveAllPages?: boolean, startPage?: number
 
 export function buildUrl(baseUrl: string, search?: string, searchField?: string, filter?: FilterParameters) {
   console.log('filter', filter);
-  let url = `${baseUrl}/works`;
-  if (search && searchField) url = `${baseUrl}/works?filter=${searchField}.search:${search}`;
-  if (search && !searchField) url = `${baseUrl}/works?search=${search}`;
-  return url;
+  let filterParams = '';
+  let SearchParams = '';
+  if (filter) filterParams = filterBuilder(filter);
+
+  if (search && searchField) filterParams += `,${searchField}.search:${search}`;
+  if (search && !searchField) SearchParams = `search=${search}`;
+  if (searchField || filter) filterParams = `filter=${filterParams}`;
+  console.log(`${baseUrl}/works?${filterParams}&${SearchParams}`);
+  return `${baseUrl}/works?${filterParams}&${SearchParams}`;
 }
 
 export function appendPaginationToUrl(url: string, perPage?: number, page?: number, retriveAllPages?: boolean) {
@@ -42,17 +47,17 @@ export async function handleMultiplePages(startPage: number, endPage: number, ur
   return works;
 }
 
-// function getPaths(obj, path = [], result = {}) {
-//   for (const key in obj) {
-//     const newPath = [...path, key];
-//     if (typeof obj[key] === 'object' && obj[key] !== null) {
-//       getPaths(obj[key], newPath, result);
-//     } else {
-//       result[newPath.join('.')] = obj[key];
-//     }
-//   }
-//   return result;
-// }
+export function getPaths(obj: { [x: string]: any }, path: string[] = [], result: { [key: string]: any } = {}) {
+  for (const key in obj) {
+    const newPath = [...path, key];
+    if (typeof obj[key] === 'object' && obj[key] !== null) {
+      getPaths(obj[key], newPath, result);
+    } else {
+      result[newPath.join('.')] = obj[key];
+    }
+  }
+  return result;
+}
 
 export async function handleAllPages(url: string, initialResponse: AxiosResponse<Works>, fileName?: string) {
   const totalPages = calculatePages(200, initialResponse.data.meta.count);
@@ -68,4 +73,15 @@ export async function handleAllPages(url: string, initialResponse: AxiosResponse
   }
   if (fileName) fs.writeFileSync(`${fileName}.json`, JSON.stringify(works, null, 2));
   return works;
+}
+
+function filterBuilder(filter: FilterParameters) {
+  let filterString = '';
+  const filterObject = getPaths(filter);
+
+  for (const key in filterObject) {
+    filterString = `${filterString}${key}:${filterObject[key]},`;
+  }
+  filterString = filterString.slice(0, -1);
+  return filterString;
 }

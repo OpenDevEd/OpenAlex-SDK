@@ -11,10 +11,8 @@ import OpenAlex from '../src/index';
     endPage: 2,
     retriveAllPages: false,
     filter: {
-      authorships: {
-        author: {
-          id: '0000-0002-1825-0097',
-        },
+      open_access: {
+        oa_status: 'hybrid',
       },
     },
   });

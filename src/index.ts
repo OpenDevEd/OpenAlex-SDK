@@ -19,16 +19,12 @@ export default class OpenAlex {
   }
 
   /**
-   * The function `work` retrieves a work object from a server using an HTTP GET request and returns it,
-   * or returns an error object if the request fails.
-   * @param {string} id - The `id` parameter is a string that represents the unique identifier of a work.
-   * @returns {Work |  { error: number; message: string }} The `work` function returns a `Promise` that resolves to either a `Work` object or an
-   * object with properties `error` and `message`.
+   * The function `work` retrieves a specific work by its ID and returns it as a Promise.
+   * @param {string} id - The `id` parameter is a string that represents the unique identifier of a
+   * work. It is used to retrieve a specific work from the server.
+   * @returns {Promise<Work>}a Promise that resolves to a Work object.
    */
   async work(id: string): Promise<Work> {
-    // // check if searchField when defined is a valid search field type
-    // if (search && searchField) url = `${this.url}/works/?filter=${searchField}.search:${search}`;
-    // if (search && !searchField) url = `${this.url}/works/?search=${search}`;
     const response: AxiosResponse<Work> = await GET(`${this.url}/works/${id}`);
     if (response.status === 200) {
       return response.data;
