@@ -6,10 +6,8 @@ import OpenAlex from '../src/index';
   const res = await openAlex.works({
     search: 'education',
     searchField: 'title',
-    perPage: 1,
-    startPage: 2,
-    endPage: 2,
-    retriveAllPages: false,
+    perPage: 200,
+
     filter: {
       open_access: {
         oa_status: 'hybrid',
@@ -17,7 +15,7 @@ import OpenAlex from '../src/index';
       from_publication_date: '2020-01-01',
       to_publication_date: '2021-01-01',
     },
-    group_by: 'acp_list.value',
+    group_by: 'apc_list.currency',
   });
   console.log(res);
 })();
