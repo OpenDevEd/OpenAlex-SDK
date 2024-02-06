@@ -24,8 +24,11 @@ export default class OpenAlex {
    * work. It is used to retrieve a specific work from the server.
    * @returns {Promise<Work>}a Promise that resolves to a Work object.
    */
-  async work(id: string): Promise<Work> {
-    const response: AxiosResponse<Work> = await GET(`${this.url}/works/${id}`);
+  async work(id: string, externalIds: 'doi' | 'mag' | 'pmid' | 'pmcid'): Promise<Work> {
+    let url = '';
+    if (externalIds) url = `${this.url}/works/${externalIds}:${id}`;
+    else url = `${this.url}/works/${id}`;
+    const response: AxiosResponse<Work> = await GET(url);
     if (response.status === 200) {
       return response.data;
     } else {
