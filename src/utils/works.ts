@@ -1,7 +1,7 @@
 import { AxiosResponse } from 'axios';
 import fs from 'fs';
 import { FilterParameters } from 'src/types/filterParameters';
-import { Works } from '../types/workTypes';
+import { GroupBy, Works } from '../types/workTypes';
 import { GET } from './http';
 
 export function calculatePages(pageSize: number, total: number): number {
@@ -14,16 +14,18 @@ export function validateParameters(retriveAllPages?: boolean, startPage?: number
     throw new Error(`Invalid search field: ${searchField}`);
 }
 
-export function buildUrl(baseUrl: string, search?: string, searchField?: string, filter?: FilterParameters) {
+export function buildUrl(baseUrl: string, search?: string, searchField?: string, filter?: FilterParameters, group_by?: GroupBy) {
   console.log('filter', filter);
   let filterParams = '';
   let SearchParams = '';
+  let GroupByParams = '';
   if (filter) filterParams = filterBuilder(filter);
+  if (group_by) GroupByParams = `group_by=${group_by}`;
 
   if (search && searchField) filterParams += `,${searchField}.search:${search}`;
   if (search && !searchField) SearchParams = `search=${search}`;
   if (searchField || filter) filterParams = `filter=${filterParams}`;
-  return `${baseUrl}/works?${filterParams}&${SearchParams}`;
+  return `${baseUrl}/works?${filterParams}&${SearchParams}&${GroupByParams}`;
 }
 
 export function appendPaginationToUrl(url: string, perPage?: number, page?: number, retriveAllPages?: boolean) {

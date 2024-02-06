@@ -244,7 +244,7 @@ export interface SearchParameters {
 export type SeachField = 'abstract' | 'title' | 'title_and_abstract' | 'display_name' | 'fulltext';
 
 //TODO : add group by type
-type GroupBy =
+export type GroupBy =
   | 'authors_count'
   | 'authorships.author.id'
   | 'authorships.author.orcid'
@@ -257,14 +257,14 @@ type GroupBy =
   | 'authorships.institutions.ror'
   | 'authorships.institutions.type'
   | 'authorships.is_corresponding'
-  | 'acp_list.value'
-  | 'acp_list.currency'
-  | 'acp_list.provenance'
-  | 'acp_list.value_usd'
-  | 'acp_paid.value'
-  | 'acp_paid.currency'
-  | 'acp_paid.provenance'
-  | 'acp_paid.value_usd'
+  | 'apc_list.value'
+  | 'apc_list.currency'
+  | 'apc_list.provenance'
+  | 'apc_list.value_usd'
+  | 'apc_paid.value'
+  | 'apc_paid.currency'
+  | 'apc_paid.provenance'
+  | 'apc_paid.value_usd'
   | 'best_oa_location.is_accepted'
   | 'best_oa_location.license'
   | 'best_oa_location.is_published'

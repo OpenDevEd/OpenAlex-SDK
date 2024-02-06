@@ -17,6 +17,7 @@ import OpenAlex from '../src/index';
       from_publication_date: '2020-01-01',
       to_publication_date: '2021-01-01',
     },
+    group_by: 'acp_list.value',
   });
   console.log(res);
 })();
