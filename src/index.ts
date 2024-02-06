@@ -77,4 +77,13 @@ export default class OpenAlex {
       throw new Error(`Error ${response.status}: ${response.statusText}`);
     }
   }
+
+  async ngram(id: string) {
+    const response: AxiosResponse<Work> = await GET(`${this.url}/works/${id}/ngram`);
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      throw new Error(`Error ${response.status}: ${response.statusText}`);
+    }
+  }
 }
