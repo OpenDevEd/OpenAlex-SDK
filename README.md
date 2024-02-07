@@ -13,7 +13,7 @@ To install the SDK, use npm:
 ### future
 
 ```bash
-npm install openalex-typescript-sdk
+npm install openalex-sdk
 ```
 
 ### forNow
@@ -27,7 +27,7 @@ npm i
 First, import the SDK in your TypeScript file:
 
 ```ts
-import { OpenAlex } from 'openalex-typescript-sdk';
+import { OpenAlex } from 'openalex-sdk';
 ```
 
 Then, you can use the SDK to interact with the Openalex API:
