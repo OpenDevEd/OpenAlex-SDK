@@ -1,4 +1,4 @@
-import { Apc_payment, KeyTypeOpenAlex, TypeCrossRef } from './workTypes';
+import { Apc_payment, KeyTypeOpenAlex, TypeCrossRef } from './work';
 
 export type FilterParameters = {
   authorships?: Authorships;

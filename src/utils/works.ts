@@ -1,7 +1,7 @@
 import { AxiosResponse } from 'axios';
 import fs from 'fs';
 import { FilterParameters } from 'src/types/filterParameters';
-import { GroupBy, Works } from '../types/workTypes';
+import { GroupBy, Works } from '../types/work';
 import { GET } from './http';
 
 export function calculatePages(pageSize: number, total: number): number {

@@ -1,7 +1,8 @@
 // Empty file to make the 'types' directory a module.
 import { AxiosResponse } from 'axios';
 
-import { SearchParameters, Work, Works } from './types/workTypes';
+import { ExternalIdsAuthor } from './types/author';
+import { ExternalIdsWork, SearchParameters, Work, Works } from './types/work';
 import { GET } from './utils/http';
 import { appendPaginationToUrl, buildUrl, handleAllPages, handleMultiplePages, validateParameters } from './utils/works';
 
@@ -24,7 +25,7 @@ export default class OpenAlex {
    * work. It is used to retrieve a specific work from the server.
    * @returns {Promise<Work>}a Promise that resolves to a Work object.
    */
-  async work(id: string, externalIds: 'doi' | 'mag' | 'pmid' | 'pmcid'): Promise<Work> {
+  async work(id: string, externalIds: ExternalIdsWork): Promise<Work> {
     let url = '';
     if (externalIds) url = `${this.url}/works/${externalIds}:${id}`;
     else url = `${this.url}/works/${id}`;
@@ -83,6 +84,17 @@ export default class OpenAlex {
 
   async ngram(id: string) {
     const response: AxiosResponse<Work> = await GET(`${this.url}/works/${id}/ngram`);
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      throw new Error(`Error ${response.status}: ${response.statusText}`);
+    }
+  }
+  async author(id: string, externalIds: ExternalIdsAuthor) {
+    let url = '';
+    if (externalIds) url = `${this.url}/authors/${externalIds}:${id}`;
+    else url = `${this.url}/authors/${id}`;
+    const response: AxiosResponse<Work> = await GET(url);
     if (response.status === 200) {
       return response.data;
     } else {

@@ -330,3 +330,5 @@ export type GroupBy =
   | 'sustainable_development_goals.id'
   | 'type'
   | 'type_crossref';
+
+export type ExternalIdsWork = 'doi' | 'mag' | 'pmid' | 'pmcid';
