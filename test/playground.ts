@@ -1,4 +1,5 @@
 import OpenAlex from '../src/index';
+// import OpenAlex from 'openalex-sdk';
 
 (async () => {
   const openAlex = new OpenAlex();
@@ -17,6 +18,7 @@ import OpenAlex from '../src/index';
       to_publication_date: '2021-01-01',
     },
     group_by: 'apc_list.currency',
+    page: 1,
   });
   // const res = await openAlex.work('14907713', 'pmid');
   console.log(res);
