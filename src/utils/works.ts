@@ -15,7 +15,6 @@ export function validateParameters(retriveAllPages?: boolean, startPage?: number
 }
 
 export function buildUrl(baseUrl: string, search?: string, searchField?: string, filter?: FilterParameters, group_by?: GroupBy) {
-  console.log('filter', filter);
   let filterParams = '';
   let SearchParams = '';
   let GroupByParams = '';
@@ -39,7 +38,6 @@ export async function handleMultiplePages(startPage: number, endPage: number, ur
   url = url.split('&page')[0];
   for (let i = startPage + 1; i <= endPage; i++) {
     const response: AxiosResponse<Works> = await GET(`${url}&page=${i}`);
-    console.log('page', i, 'response', response.status);
     if (response.status === 200) works.results = works.results.concat(response.data.results);
     else throw new Error(`Error ${response.status}: ${response.statusText}`);
     if (i === endPage) works.meta.page = endPage;
