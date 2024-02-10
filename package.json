@@ -10,7 +10,9 @@
     "dev": "ts-node src/index.ts",
     "start": "node dist/src/index.js",
     "build": "tsc",
-    "playground": "ts-node test/playground.ts"
+    "playground": "ts-node test/playground.ts",
+    "prepublish": "npm run build",
+    "publish": "prepublish ;npm version patch ; npm publish"
   },
   "repository": {
     "type": "git",
