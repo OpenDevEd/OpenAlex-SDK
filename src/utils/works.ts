@@ -22,7 +22,7 @@ export function buildUrl(baseUrl: string, search?: string, searchField?: string,
   if (filter) filterParams = filterBuilder(filter);
   if (group_by) GroupByParams = `group_by=${group_by}`;
 
-  if (search && searchField) filterParams += `,${searchField}.search:${search}`;
+  if (search && searchField) filterParams += filter ? `,${searchField}.search:${search}` : `${searchField}.search:${search}`;
   if (search && !searchField) SearchParams = `search=${search}`;
   if (searchField || filter) filterParams = `filter=${filterParams}`;
   return `${baseUrl}/works?${filterParams}&${SearchParams}&${GroupByParams}`;

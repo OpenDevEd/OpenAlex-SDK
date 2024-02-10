@@ -9,15 +9,7 @@ import OpenAlex from '../src/index';
     searchField: 'title',
     perPage: 200,
 
-    filter: {
-      type: 'book',
-      open_access: {
-        oa_status: 'hybrid',
-      },
-      from_publication_date: '2020-01-01',
-      to_publication_date: '2021-01-01',
-    },
-    group_by: 'apc_list.currency',
+    fileName: 'test',
     page: 1,
   });
   // const res = await openAlex.work('14907713', 'pmid');

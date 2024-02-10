@@ -1,6 +1,7 @@
 // Empty file to make the 'types' directory a module.
 import { AxiosResponse } from 'axios';
 
+import fs from 'fs';
 import { ExternalIdsAuthor } from './types/author';
 import { ExternalIdsWork, SearchParameters, Work, Works } from './types/work';
 import { GET } from './utils/http';
@@ -67,6 +68,7 @@ export default class OpenAlex {
     }
 
     if (response.status === 200) {
+      if (fileName) await fs.writeFileSync(`${fileName}.json`, JSON.stringify(response.data, null, 2));
       return response.data;
     } else {
       throw new Error(`Error ${response.status}: ${response.statusText}`);
