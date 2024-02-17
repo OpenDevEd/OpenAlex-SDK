@@ -332,3 +332,13 @@ export type GroupBy =
   | 'type_crossref';
 
 export type ExternalIdsWork = 'doi' | 'mag' | 'pmid' | 'pmcid';
+export type SortWork = {
+  field:
+    | 'display_name'
+    | 'cited_by_count'
+    | 'works_count'
+    | 'publication_date'
+    /**  relevance_score (only exists if there's a search filter active) */
+    | 'relevance_score ';
+  order: 'asc' | 'desc';
+};
