@@ -238,7 +238,8 @@ export interface SearchParameters {
   startPage?: number;
   endPage?: number;
   filter?: FilterParameters;
-  group_by?: GroupBy;
+  groupBy?: GroupBy;
+  sortBy?: SortByWork;
 }
 
 export type SeachField = 'abstract' | 'title' | 'title_and_abstract' | 'display_name' | 'fulltext';
@@ -332,7 +333,7 @@ export type GroupBy =
   | 'type_crossref';
 
 export type ExternalIdsWork = 'doi' | 'mag' | 'pmid' | 'pmcid';
-export type SortWork = {
+export type SortByWork = {
   field:
     | 'display_name'
     | 'cited_by_count'

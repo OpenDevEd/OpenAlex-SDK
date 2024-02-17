@@ -1,7 +1,7 @@
 import { AxiosResponse } from 'axios';
 import fs from 'fs';
 import { FilterParameters } from 'src/types/filterParameters';
-import { GroupBy, SortWork, Works } from '../types/work';
+import { GroupBy, SortByWork, Works } from '../types/work';
 import { GET } from './http';
 
 export function calculatePages(pageSize: number, total: number): number {
@@ -14,7 +14,7 @@ export function validateParameters(retriveAllPages?: boolean, startPage?: number
     throw new Error(`Invalid search field: ${searchField}`);
 }
 
-export function buildUrl(baseUrl: string, search?: string, searchField?: string, filter?: FilterParameters, group_by?: GroupBy, sortBy?: SortWork) {
+export function buildUrl(baseUrl: string, search?: string, searchField?: string, filter?: FilterParameters, group_by?: GroupBy, sortBy?: SortByWork) {
   let filterParams = '';
   let SearchParams = '';
   let GroupByParams = '';
