@@ -13,7 +13,8 @@ import OpenAlex from '../src/index';
       has_fulltext: true,
     },
     toCsv: 'test100',
-    page: 1,
+    startPage: 1,
+    endPage: 2,
   });
   // const res = await openAlex.work('14907713', 'pmid');
   console.log(res);

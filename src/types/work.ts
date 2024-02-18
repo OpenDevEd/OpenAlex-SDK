@@ -3,10 +3,16 @@ import { FilterParameters } from './filterParameters';
 export type WorkResult = Work | { error: number; message: string };
 
 export type Work = {
-  abstract_inverted_index?: {};
+  /** this object get deleted by default and converted to string under abstract */
+  abstract_inverted_index?: { [key: string]: number[] };
   alternate_host_venues?: any;
   // this limited to 100 authors
   authorships?: Authorship[];
+  /**
+   * abstract does not exist in original response from openalex
+   * it is created by converting abstract_inverted_index to string
+   */
+  abstract?: string;
   apc_list?: Apc_payment;
   apc_paid?: Apc_payment;
   best_oa_location?: LocationOpenAlex;
