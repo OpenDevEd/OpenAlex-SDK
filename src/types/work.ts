@@ -233,8 +233,8 @@ export interface SearchParameters {
   perPage?: number;
   page?: number;
   retriveAllPages?: boolean;
-  toJson?: boolean;
-  fileName?: string;
+  toCsv?: string;
+  toJson?: string;
   startPage?: number;
   endPage?: number;
   filter?: FilterParameters;
