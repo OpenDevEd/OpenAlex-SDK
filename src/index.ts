@@ -6,7 +6,14 @@ import { ExternalIdsAuthor } from './types/author';
 import { ExternalIdsWork, SearchParameters, Work, Works } from './types/work';
 import { convertToCSV } from './utils/exportCSV';
 import { GET } from './utils/http';
-import { appendPaginationToUrl, buildUrl, handleAllPages, handleMultiplePages, validateParameters } from './utils/works';
+import {
+  appendPaginationToUrl,
+  buildUrl,
+  convertAbstractArrayToString,
+  handleAllPages,
+  handleMultiplePages,
+  validateParameters,
+} from './utils/works';
 
 export default class OpenAlex {
   email: string | null;
@@ -60,22 +67,23 @@ export default class OpenAlex {
 
     const response: AxiosResponse<Works> = await GET(url);
 
-    if (startPage && endPage) {
-      return handleMultiplePages(startPage, endPage, url, response, toJson, toCsv);
-    }
-
-    if (retriveAllPages) {
-      return handleAllPages(url, response, toJson, toCsv);
-    }
-
     if (response.status === 200) {
+      response.data.results = response.data.results.map((work) => {
+        if (work.abstract_inverted_index) work.abstract = convertAbstractArrayToString(work.abstract_inverted_index);
+        delete work.abstract_inverted_index;
+        return work;
+      });
+      if (startPage && endPage) {
+        return handleMultiplePages(startPage, endPage, url, response, toJson, toCsv);
+      }
+
+      if (retriveAllPages) {
+        return handleAllPages(url, response, toJson, toCsv);
+      }
+
       if (toJson) await fs.writeFileSync(`${toJson}.json`, JSON.stringify(response.data, null, 2));
       if (toCsv) {
-        const results = response.data.results.map((work) => {
-          delete work.abstract_inverted_index;
-          return work;
-        });
-        convertToCSV(results, toCsv);
+        convertToCSV(response.data.results, toCsv);
       }
       return response.data;
     } else {
