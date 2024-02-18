@@ -1,6 +1,6 @@
 {
   "name": "openalex-sdk",
-  "version": "1.0.2",
+  "version": "1.0.6",
   "description": "",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -10,7 +10,9 @@
     "dev": "ts-node src/index.ts",
     "start": "node dist/src/index.js",
     "build": "tsc",
-    "playground": "ts-node test/playground.ts"
+    "playground": "ts-node test/playground.ts",
+    "prepublish": "npm run build",
+    "publish": "prepublish ;npm version patch ; npm publish"
   },
   "repository": {
     "type": "git",

@@ -39,12 +39,12 @@ export default class OpenAlex {
   }
 
   async works(searchParameters: SearchParameters = { perPage: 25, page: 1, retriveAllPages: false }): Promise<Works> {
-    const { retriveAllPages, searchField, search, fileName, startPage, endPage, filter, group_by } = searchParameters;
+    const { retriveAllPages, searchField, search, fileName, startPage, endPage, filter, groupBy: group_by, sortBy } = searchParameters;
     let { perPage, page } = searchParameters;
 
     validateParameters(retriveAllPages, startPage, endPage, searchField);
 
-    let url = buildUrl(this.url, search, searchField, filter, group_by);
+    let url = buildUrl(this.url, search, searchField, filter, group_by, sortBy);
 
     if (retriveAllPages) {
       perPage = 200;

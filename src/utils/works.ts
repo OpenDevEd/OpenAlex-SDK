@@ -1,7 +1,7 @@
 import { AxiosResponse } from 'axios';
 import fs from 'fs';
 import { FilterParameters } from 'src/types/filterParameters';
-import { GroupBy, Works } from '../types/work';
+import { GroupBy, SortByWork, Works } from '../types/work';
 import { GET } from './http';
 
 export function calculatePages(pageSize: number, total: number): number {
@@ -14,17 +14,19 @@ export function validateParameters(retriveAllPages?: boolean, startPage?: number
     throw new Error(`Invalid search field: ${searchField}`);
 }
 
-export function buildUrl(baseUrl: string, search?: string, searchField?: string, filter?: FilterParameters, group_by?: GroupBy) {
+export function buildUrl(baseUrl: string, search?: string, searchField?: string, filter?: FilterParameters, group_by?: GroupBy, sortBy?: SortByWork) {
   let filterParams = '';
   let SearchParams = '';
   let GroupByParams = '';
+  let SortParams = '';
   if (filter) filterParams = filterBuilder(filter);
-  if (group_by) GroupByParams = `group_by=${group_by}`;
+  if (group_by) GroupByParams = `&group_by=${group_by}`;
+  if (sortBy) SortParams = sortBy.order === 'desc' ? `&sort=${sortBy.field}:${sortBy.order}` : `&sort=${sortBy.field}`;
 
   if (search && searchField) filterParams += filter ? `,${searchField}.search:${search}` : `${searchField}.search:${search}`;
-  if (search && !searchField) SearchParams = `search=${search}`;
-  if (searchField || filter) filterParams = `filter=${filterParams}`;
-  return `${baseUrl}/works?${filterParams}&${SearchParams}&${GroupByParams}`;
+  if (search && !searchField) SearchParams = `&search=${search}`;
+  if (searchField || filter) filterParams = `&filter=${filterParams}`;
+  return `${baseUrl}/works?${filterParams}${SearchParams}${GroupByParams}${SortParams}`;
 }
 
 export function appendPaginationToUrl(url: string, perPage?: number, page?: number, retriveAllPages?: boolean) {
