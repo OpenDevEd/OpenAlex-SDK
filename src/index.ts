@@ -4,6 +4,7 @@ import { AxiosResponse } from 'axios';
 import fs from 'fs';
 import { ExternalIdsAuthor } from './types/author';
 import { ExternalIdsWork, SearchParameters, Work, Works } from './types/work';
+import { convertToCSV } from './utils/exportCSV';
 import { GET } from './utils/http';
 import { appendPaginationToUrl, buildUrl, handleAllPages, handleMultiplePages, validateParameters } from './utils/works';
 
@@ -39,7 +40,7 @@ export default class OpenAlex {
   }
 
   async works(searchParameters: SearchParameters = { perPage: 25, page: 1, retriveAllPages: false }): Promise<Works> {
-    const { retriveAllPages, searchField, search, toJson, startPage, endPage, filter, groupBy: group_by, sortBy } = searchParameters;
+    const { retriveAllPages, searchField, search, toJson, toCsv, startPage, endPage, filter, groupBy: group_by, sortBy } = searchParameters;
     let { perPage, page } = searchParameters;
 
     validateParameters(retriveAllPages, startPage, endPage, searchField);
@@ -60,15 +61,22 @@ export default class OpenAlex {
     const response: AxiosResponse<Works> = await GET(url);
 
     if (startPage && endPage) {
-      return handleMultiplePages(startPage, endPage, url, response, toJson);
+      return handleMultiplePages(startPage, endPage, url, response, toJson, toCsv);
     }
 
     if (retriveAllPages) {
-      return handleAllPages(url, response, toJson);
+      return handleAllPages(url, response, toJson, toCsv);
     }
 
     if (response.status === 200) {
       if (toJson) await fs.writeFileSync(`${toJson}.json`, JSON.stringify(response.data, null, 2));
+      if (toCsv) {
+        const results = response.data.results.map((work) => {
+          delete work.abstract_inverted_index;
+          return work;
+        });
+        convertToCSV(results, toCsv);
+      }
       return response.data;
     } else {
       throw new Error(`Error ${response.status}: ${response.statusText}`);

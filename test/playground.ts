@@ -1,5 +1,5 @@
 import OpenAlex from '../src/index';
-import { convertToCSV } from '../src/utils/exportCSV';
+// import { convertToCSV } from '../src/utils/exportCSV';
 // import OpenAlex from 'openalex-sdk';
 
 (async () => {
@@ -8,19 +8,14 @@ import { convertToCSV } from '../src/utils/exportCSV';
   const res = await openAlex.works({
     search: 'education',
     searchField: 'title',
-    perPage: 200,
+    perPage: 1,
     filter: {
       has_fulltext: true,
     },
-
-    toJson: 'test',
+    toCsv: 'test100',
     page: 1,
   });
   // const res = await openAlex.work('14907713', 'pmid');
   console.log(res);
   // remove abstract and fulltext from the csv
-  res.results.forEach((work) => {
-    delete work.abstract_inverted_index;
-  });
-  convertToCSV(res.results, 'test1');
 })();

@@ -2,6 +2,7 @@ import { AxiosResponse } from 'axios';
 import fs from 'fs';
 import { FilterParameters } from 'src/types/filterParameters';
 import { GroupBy, SortByWork, Works } from '../types/work';
+import { convertToCSV } from './exportCSV';
 import { GET } from './http';
 
 export function calculatePages(pageSize: number, total: number): number {
@@ -35,7 +36,14 @@ export function appendPaginationToUrl(url: string, perPage?: number, page?: numb
   return url;
 }
 
-export async function handleMultiplePages(startPage: number, endPage: number, url: string, initialResponse: AxiosResponse<Works>, toJson?: string) {
+export async function handleMultiplePages(
+  startPage: number,
+  endPage: number,
+  url: string,
+  initialResponse: AxiosResponse<Works>,
+  toJson?: string,
+  toCsv?: string,
+) {
   const works = initialResponse.data;
   url = url.split('&page')[0];
   for (let i = startPage + 1; i <= endPage; i++) {
@@ -45,6 +53,13 @@ export async function handleMultiplePages(startPage: number, endPage: number, ur
     if (i === endPage) works.meta.page = endPage;
   }
   if (toJson) fs.writeFileSync(`${toJson}.json`, JSON.stringify(works, null, 2));
+  if (toCsv) {
+    const results = works.results.map((work) => {
+      delete work.abstract_inverted_index;
+      return work;
+    });
+    convertToCSV(results, toCsv);
+  }
   return works;
 }
 
@@ -60,7 +75,7 @@ export function getPaths(obj: { [x: string]: any }, path: string[] = [], result:
   return result;
 }
 
-export async function handleAllPages(url: string, initialResponse: AxiosResponse<Works>, toJson?: string) {
+export async function handleAllPages(url: string, initialResponse: AxiosResponse<Works>, toJson?: string, toCsv?: string) {
   const totalPages = calculatePages(200, initialResponse.data.meta.count);
   const works = initialResponse.data;
   console.log('total number of pages ', totalPages);
@@ -73,6 +88,15 @@ export async function handleAllPages(url: string, initialResponse: AxiosResponse
     if (i === totalPages) works.meta.page = totalPages;
   }
   if (toJson) fs.writeFileSync(`${toJson}.json`, JSON.stringify(works, null, 2));
+  if (toCsv) {
+    console.log(toCsv);
+
+    const results = works.results.map((work) => {
+      delete work.abstract_inverted_index;
+      return work;
+    });
+    convertToCSV(results, toCsv);
+  }
   return works;
 }
 
