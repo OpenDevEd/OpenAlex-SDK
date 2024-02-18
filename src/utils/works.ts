@@ -35,7 +35,7 @@ export function appendPaginationToUrl(url: string, perPage?: number, page?: numb
   return url;
 }
 
-export async function handleMultiplePages(startPage: number, endPage: number, url: string, initialResponse: AxiosResponse<Works>, fileName?: string) {
+export async function handleMultiplePages(startPage: number, endPage: number, url: string, initialResponse: AxiosResponse<Works>, toJson?: string) {
   const works = initialResponse.data;
   url = url.split('&page')[0];
   for (let i = startPage + 1; i <= endPage; i++) {
@@ -44,7 +44,7 @@ export async function handleMultiplePages(startPage: number, endPage: number, ur
     else throw new Error(`Error ${response.status}: ${response.statusText}`);
     if (i === endPage) works.meta.page = endPage;
   }
-  if (fileName) fs.writeFileSync(`${fileName}.json`, JSON.stringify(works, null, 2));
+  if (toJson) fs.writeFileSync(`${toJson}.json`, JSON.stringify(works, null, 2));
   return works;
 }
 
@@ -60,7 +60,7 @@ export function getPaths(obj: { [x: string]: any }, path: string[] = [], result:
   return result;
 }
 
-export async function handleAllPages(url: string, initialResponse: AxiosResponse<Works>, fileName?: string) {
+export async function handleAllPages(url: string, initialResponse: AxiosResponse<Works>, toJson?: string) {
   const totalPages = calculatePages(200, initialResponse.data.meta.count);
   const works = initialResponse.data;
   console.log('total number of pages ', totalPages);
@@ -72,7 +72,7 @@ export async function handleAllPages(url: string, initialResponse: AxiosResponse
     else throw new Error(`Error ${response.status}: ${response.statusText}`);
     if (i === totalPages) works.meta.page = totalPages;
   }
-  if (fileName) fs.writeFileSync(`${fileName}.json`, JSON.stringify(works, null, 2));
+  if (toJson) fs.writeFileSync(`${toJson}.json`, JSON.stringify(works, null, 2));
   return works;
 }
 

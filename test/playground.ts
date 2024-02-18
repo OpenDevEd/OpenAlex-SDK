@@ -13,7 +13,7 @@ import { convertToCSV } from '../src/utils/exportCSV';
       has_fulltext: true,
     },
 
-    fileName: 'test',
+    toJson: 'test',
     page: 1,
   });
   // const res = await openAlex.work('14907713', 'pmid');
