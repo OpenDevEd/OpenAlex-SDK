@@ -149,3 +149,21 @@ export class Biblio {
   @Column({ nullable: true })
   last_page?: string;
 }
+
+@Entity()
+export class ConceptWork {
+  @Column({ primary: true })
+  id: string;
+
+  @Column({ nullable: true })
+  wikidata?: string;
+
+  @Column({ nullable: true })
+  display_name?: string;
+
+  @Column({ nullable: true })
+  level?: number;
+
+  @Column({ nullable: true })
+  score?: number;
+}
