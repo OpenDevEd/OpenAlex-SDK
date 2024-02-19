@@ -167,3 +167,12 @@ export class ConceptWork {
   @Column({ nullable: true })
   score?: number;
 }
+
+@Entity()
+export class CountsByYear {
+  @Column({ primary: true })
+  year: number;
+
+  @Column()
+  count: number;
+}
