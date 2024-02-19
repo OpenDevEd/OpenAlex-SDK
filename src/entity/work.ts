@@ -1,42 +1,42 @@
 import { Column, PrimaryGeneratedColumn, OneToOne, JoinColumn, Entity } from 'typeorm';
 
-@Entity()
-export class Work {
-  @PrimaryGeneratedColumn()
-  id: string;
+// @Entity()
+// export class Work {
+//   @PrimaryGeneratedColumn()
+//   id: string;
 
-  @Column('simple-json', { nullable: true })
-  abstract_inverted_index?: {};
+//   @Column('simple-json', { nullable: true })
+//   abstract_inverted_index?: {};
 
-  @Column('simple-json', { nullable: true })
-  alternate_host_venues?: any;
-}
+//   @Column('simple-json', { nullable: true })
+//   alternate_host_venues?: any;
+// }
 
 export type AuthorPosition = 'first' | 'last' | 'middle';
-@Entity()
-export class Authorship {
-  @PrimaryGeneratedColumn()
-  id: string;
+// @Entity()
+// export class Authorship {
+//   @PrimaryGeneratedColumn()
+//   id: string;
 
-  @OneToOne(() => Author)
-  @JoinColumn()
-  author: Author;
+//   @OneToOne(() => Author)
+//   @JoinColumn()
+//   author: Author;
 
-  @Column({ enum: ['first', 'last', 'middle'], nullable: true })
-  author_position?: AuthorPosition;
+//   @Column({ enum: ['first', 'last', 'middle'], nullable: true })
+//   author_position?: AuthorPosition;
 
-  @Column({ type: 'simple-array', nullable: true })
-  countries?: string[];
+//   @Column({ type: 'simple-array', nullable: true })
+//   countries?: string[];
 
-  // TODO: ask about Author and Institution relationship
-  institutions?: Institution[];
+//   // TODO: ask about Author and Institution relationship
+//   institutions?: Institution[];
 
-  is_corresponding?: boolean;
+//   is_corresponding?: boolean;
 
-  raw_affiliation_string?: string;
+//   raw_affiliation_string?: string;
 
-  raw_author_name?: string;
-}
+//   raw_author_name?: string;
+// }
 
 @Entity()
 export class Author {
@@ -49,6 +49,7 @@ export class Author {
   @Column({ nullable: true })
   orcid?: string;
 }
+
 @Entity()
 export class Institution {
   @Column({ primary: true })
@@ -132,4 +133,19 @@ export class Source {
 
   @Column({ nullable: true })
   type?: string;
+}
+
+@Entity()
+export class Biblio {
+  @Column({ nullable: true })
+  volume?: string;
+
+  @Column({ nullable: true })
+  issue?: string;
+
+  @Column({ nullable: true })
+  first_page?: string;
+
+  @Column({ nullable: true })
+  last_page?: string;
 }
