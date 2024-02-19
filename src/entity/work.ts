@@ -1,4 +1,4 @@
-import { Column, PrimaryGeneratedColumn, OneToOne, JoinColumn, Entity } from 'typeorm';
+import { Column, PrimaryGeneratedColumn, Entity, OneToMany, PrimaryColumn, ManyToOne, ManyToMany, JoinTable } from 'typeorm';
 
 // @Entity()
 // export class Work {
@@ -13,34 +13,37 @@ import { Column, PrimaryGeneratedColumn, OneToOne, JoinColumn, Entity } from 'ty
 // }
 
 export type AuthorPosition = 'first' | 'last' | 'middle';
-// @Entity()
-// export class Authorship {
-//   @PrimaryGeneratedColumn()
-//   id: string;
+@Entity()
+export class Authorship {
+  @PrimaryGeneratedColumn()
+  id: string;
 
-//   @OneToOne(() => Author)
-//   @JoinColumn()
-//   author: Author;
+  @ManyToOne(() => Author, (author) => author.authorships)
+  author: Author;
 
-//   @Column({ enum: ['first', 'last', 'middle'], nullable: true })
-//   author_position?: AuthorPosition;
+  @Column({ enum: ['first', 'last', 'middle'], nullable: true })
+  author_position?: AuthorPosition;
 
-//   @Column({ type: 'simple-array', nullable: true })
-//   countries?: string[];
+  @Column({ type: 'simple-array', nullable: true })
+  countries?: string[];
 
-//   // TODO: ask about Author and Institution relationship
-//   institutions?: Institution[];
+  @ManyToMany(() => Institution)
+  @JoinTable()
+  institutions?: Institution[];
 
-//   is_corresponding?: boolean;
+  @Column({ nullable: true })
+  is_corresponding?: boolean;
 
-//   raw_affiliation_string?: string;
+  @Column({ nullable: true })
+  raw_affiliation_string?: string;
 
-//   raw_author_name?: string;
-// }
+  @Column({ nullable: true })
+  raw_author_name?: string;
+}
 
 @Entity()
 export class Author {
-  @Column({ primary: true })
+  @PrimaryColumn()
   id: string;
 
   @Column()
@@ -48,11 +51,14 @@ export class Author {
 
   @Column({ nullable: true })
   orcid?: string;
+
+  @OneToMany(() => Authorship, (authorship) => authorship.author)
+  authorships?: Authorship[];
 }
 
 @Entity()
 export class Institution {
-  @Column({ primary: true })
+  @PrimaryColumn()
   id: string;
 
   @Column({ nullable: true })
@@ -103,8 +109,7 @@ export class LocationOpenAlex {
   @Column({ nullable: true })
   license?: string;
 
-  @OneToOne(() => Source)
-  @JoinColumn()
+  @ManyToOne(() => Source, (source) => source.locations)
   source?: Source;
 
   @Column({ nullable: true })
@@ -116,7 +121,7 @@ export class LocationOpenAlex {
 
 @Entity()
 export class Source {
-  @Column({ primary: true })
+  @PrimaryColumn()
   id: string;
 
   @Column({ nullable: true })
@@ -133,6 +138,9 @@ export class Source {
 
   @Column({ nullable: true })
   type?: string;
+
+  @OneToMany(() => LocationOpenAlex, (location) => location.source)
+  locations?: LocationOpenAlex[];
 }
 
 @Entity()
@@ -152,7 +160,7 @@ export class Biblio {
 
 @Entity()
 export class ConceptWork {
-  @Column({ primary: true })
+  @PrimaryColumn()
   id: string;
 
   @Column({ nullable: true })
@@ -170,7 +178,10 @@ export class ConceptWork {
 
 @Entity()
 export class CountsByYear {
-  @Column({ primary: true })
+  @PrimaryGeneratedColumn()
+  id: string;
+
+  @Column()
   year: number;
 
   @Column()
