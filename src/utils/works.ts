@@ -36,12 +36,6 @@ export function appendPaginationToUrl(url: string, perPage?: number, page?: numb
   return url;
 }
 
-export function appendCursorToUrl(url: string, perPage?: number, cursor?: string, retriveAllPages?: boolean) {
-  url = perPage ? `${url}&per_page=${perPage}` : url;
-  url = cursor && !retriveAllPages ? `${url}&cursor=${cursor}` : url;
-  return url;
-}
-
 export async function handleMultiplePages(
   startPage: number,
   endPage: number,
