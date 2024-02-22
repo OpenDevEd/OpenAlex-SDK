@@ -14,7 +14,7 @@ import {
   handleMultiplePages,
   validateParameters,
 } from './utils/works';
-import { appendCursorToUrl, getCursorByPage, handleMultiplePagesc } from './utils/cursor';
+import { appendCursorToUrl, getCursorByPage, handleAllPagesc, handleMultiplePagesc } from './utils/cursor';
 
 export default class OpenAlex {
   email: string | null;
@@ -100,7 +100,6 @@ export default class OpenAlex {
 
     let url = buildUrl(this.url, search, searchField, filter, group_by, sortBy);
     let cursor = await getCursorByPage(page, url, perPage);
-    console.log(cursor);
     if (retriveAllPages) {
       perPage = 200;
       cursor = '*';
@@ -126,7 +125,7 @@ export default class OpenAlex {
       }
 
       if (retriveAllPages) {
-        return handleAllPages(url, response, toJson, toCsv);
+        return handleAllPagesc(url, response, toJson, toCsv);
       }
 
       if (toJson) await fs.writeFileSync(`${toJson}.json`, JSON.stringify(response.data, null, 2));
