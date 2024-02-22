@@ -6,15 +6,8 @@ import { ExternalIdsAuthor } from './types/author';
 import { ExternalIdsWork, SearchParameters, Work, Works } from './types/work';
 import { convertToCSV } from './utils/exportCSV';
 import { GET } from './utils/http';
-import {
-  appendPaginationToUrl,
-  buildUrl,
-  convertAbstractArrayToString,
-  handleAllPages,
-  handleMultiplePages,
-  validateParameters,
-} from './utils/works';
-import { appendCursorToUrl, getCursorByPage, handleAllPagesc, handleMultiplePagesc } from './utils/cursor';
+import { buildUrl, convertAbstractArrayToString, validateParameters } from './utils/works';
+import { appendCursorToUrl, getCursorByPage, handleAllPages, handleMultiplePages } from './utils/cursor';
 
 export default class OpenAlex {
   email: string | null;
@@ -49,26 +42,28 @@ export default class OpenAlex {
 
   async works(searchParameters: SearchParameters = { perPage: 25, page: 1, retriveAllPages: false }): Promise<Works> {
     const { retriveAllPages, searchField, search, toJson, toCsv, startPage, endPage, filter, groupBy: group_by, sortBy } = searchParameters;
-    let { perPage, page } = searchParameters;
-
+    let { perPage } = searchParameters;
+    let { page } = searchParameters;
     validateParameters(retriveAllPages, startPage, endPage, searchField);
 
     let url = buildUrl(this.url, search, searchField, filter, group_by, sortBy);
-
+    let cursor = await getCursorByPage(page, url, perPage);
     if (retriveAllPages) {
       perPage = 200;
-      page = 1;
+      cursor = '*';
     }
 
     if (startPage && endPage) {
       page = startPage;
+      cursor = await getCursorByPage(startPage, url, perPage);
     }
 
-    url = appendPaginationToUrl(url, perPage, page, retriveAllPages);
+    url = appendCursorToUrl(url, perPage, cursor, retriveAllPages);
 
     const response: AxiosResponse<Works> = await GET(url);
 
     if (response.status === 200) {
+      response.data.meta.page = page || 1;
       response.data.results = response.data.results.map((work) => {
         if (work.abstract_inverted_index) work.abstract = convertAbstractArrayToString(work.abstract_inverted_index);
         delete work.abstract_inverted_index;
@@ -80,52 +75,6 @@ export default class OpenAlex {
 
       if (retriveAllPages) {
         return handleAllPages(url, response, toJson, toCsv);
-      }
-
-      if (toJson) await fs.writeFileSync(`${toJson}.json`, JSON.stringify(response.data, null, 2));
-      if (toCsv) {
-        convertToCSV(response.data.results, toCsv);
-      }
-      return response.data;
-    } else {
-      throw new Error(`Error ${response.status}: ${response.statusText}`);
-    }
-  }
-
-  async worksc(searchParameters: SearchParameters = { perPage: 25, page: 1, retriveAllPages: false }): Promise<Works> {
-    const { retriveAllPages, searchField, search, toJson, toCsv, startPage, endPage, filter, groupBy: group_by, sortBy } = searchParameters;
-    let { perPage } = searchParameters;
-    const { page } = searchParameters;
-    validateParameters(retriveAllPages, startPage, endPage, searchField);
-
-    let url = buildUrl(this.url, search, searchField, filter, group_by, sortBy);
-    let cursor = await getCursorByPage(page, url, perPage);
-    if (retriveAllPages) {
-      perPage = 200;
-      cursor = '*';
-    }
-
-    if (startPage && endPage) {
-      // page = startPage;
-      cursor = await getCursorByPage(startPage, url, perPage);
-    }
-
-    url = appendCursorToUrl(url, perPage, cursor, retriveAllPages);
-
-    const response: AxiosResponse<Works> = await GET(url);
-
-    if (response.status === 200) {
-      response.data.results = response.data.results.map((work) => {
-        if (work.abstract_inverted_index) work.abstract = convertAbstractArrayToString(work.abstract_inverted_index);
-        delete work.abstract_inverted_index;
-        return work;
-      });
-      if (startPage && endPage) {
-        return handleMultiplePagesc(startPage, endPage, url, response, toJson, toCsv);
-      }
-
-      if (retriveAllPages) {
-        return handleAllPagesc(url, response, toJson, toCsv);
       }
 
       if (toJson) await fs.writeFileSync(`${toJson}.json`, JSON.stringify(response.data, null, 2));

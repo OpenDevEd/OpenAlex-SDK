@@ -239,7 +239,6 @@ export interface SearchParameters {
   searchField?: SeachField;
   perPage?: number;
   page?: number;
-  cursor?: string;
   retriveAllPages?: boolean;
   toCsv?: string;
   toJson?: string;

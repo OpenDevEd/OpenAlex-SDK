@@ -1,9 +1,5 @@
-import { AxiosResponse } from 'axios';
-import fs from 'fs';
 import { FilterParameters } from 'src/types/filterParameters';
-import { GroupBy, SortByWork, Works } from '../types/work';
-import { convertToCSV } from './exportCSV';
-import { GET } from './http';
+import { GroupBy, SortByWork } from '../types/work';
 
 export function calculatePages(pageSize: number, total: number): number {
   const totalPages = Math.ceil(total / pageSize);
@@ -36,33 +32,6 @@ export function appendPaginationToUrl(url: string, perPage?: number, page?: numb
   return url;
 }
 
-export async function handleMultiplePages(
-  startPage: number,
-  endPage: number,
-  url: string,
-  initialResponse: AxiosResponse<Works>,
-  toJson?: string,
-  toCsv?: string,
-) {
-  const works = initialResponse.data;
-  url = url.split('&page')[0];
-  for (let i = startPage + 1; i <= endPage; i++) {
-    const response: AxiosResponse<Works> = await GET(`${url}&page=${i}`);
-    if (response.status === 200) works.results = works.results.concat(response.data.results);
-    else throw new Error(`Error ${response.status}: ${response.statusText}`);
-    if (i === endPage) works.meta.page = endPage;
-  }
-  works.results = works.results.map((work) => {
-    if (work.abstract_inverted_index) work.abstract = convertAbstractArrayToString(work.abstract_inverted_index);
-    delete work.abstract_inverted_index;
-    return work;
-  });
-  if (toJson) fs.writeFileSync(`${toJson}.json`, JSON.stringify(works, null, 2));
-  if (toCsv) convertToCSV(works.results, toCsv);
-
-  return works;
-}
-
 export function getPaths(obj: { [x: string]: any }, path: string[] = [], result: { [key: string]: any } = {}) {
   for (const key in obj) {
     const newPath = [...path, key];
@@ -73,30 +42,6 @@ export function getPaths(obj: { [x: string]: any }, path: string[] = [], result:
     }
   }
   return result;
-}
-
-export async function handleAllPages(url: string, initialResponse: AxiosResponse<Works>, toJson?: string, toCsv?: string) {
-  const totalPages = calculatePages(200, initialResponse.data.meta.count);
-  const works = initialResponse.data;
-  console.log('total number of pages ', totalPages);
-  console.log('page', 1, 'response', initialResponse.status);
-  for (let i = 2; i <= totalPages; i++) {
-    const response: AxiosResponse<Works> = await GET(`${url}&page=${i}`);
-    console.log('page', i, 'response', response.status);
-    if (response.status === 200) works.results = works.results.concat(response.data.results);
-    else throw new Error(`Error ${response.status}: ${response.statusText}`);
-    if (i === totalPages) works.meta.page = totalPages;
-  }
-  works.results = works.results.map((work) => {
-    if (work.abstract_inverted_index) work.abstract = convertAbstractArrayToString(work.abstract_inverted_index);
-    delete work.abstract_inverted_index;
-    return work;
-  });
-  if (toJson) fs.writeFileSync(`${toJson}.json`, JSON.stringify(works, null, 2));
-  if (toCsv) {
-    convertToCSV(works.results, toCsv);
-  }
-  return works;
 }
 
 function filterBuilder(filter: FilterParameters) {

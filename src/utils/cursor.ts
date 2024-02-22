@@ -56,7 +56,7 @@ export async function getCursorByPage(page: number = 1, url: string, perPage: nu
   return cursor;
 }
 
-export async function handleMultiplePagesc(
+export async function handleMultiplePages(
   startPage: number,
   endPage: number,
   url: string,
@@ -73,7 +73,10 @@ export async function handleMultiplePagesc(
       works.results = works.results.concat(response.data.results);
       cursor = response.data.meta.next_cursor;
     } else throw new Error(`Error ${response.status}: ${response.statusText}`);
-    if (i === endPage) works.meta.next_cursor = cursor;
+    if (i === endPage) {
+      works.meta.next_cursor = cursor;
+      works.meta.page = endPage;
+    }
   }
   works.results = works.results.map((work) => {
     if (work.abstract_inverted_index) work.abstract = convertAbstractArrayToString(work.abstract_inverted_index);
@@ -86,7 +89,7 @@ export async function handleMultiplePagesc(
   return works;
 }
 
-export async function handleAllPagesc(url: string, initialResponse: AxiosResponse<Works>, toJson?: string, toCsv?: string) {
+export async function handleAllPages(url: string, initialResponse: AxiosResponse<Works>, toJson?: string, toCsv?: string) {
   const totalPages = calculatePages(200, initialResponse.data.meta.count);
   const works = initialResponse.data;
   let cursor = works.meta.next_cursor;
@@ -99,7 +102,10 @@ export async function handleAllPagesc(url: string, initialResponse: AxiosRespons
       works.results = works.results.concat(response.data.results);
       cursor = response.data.meta.next_cursor;
     } else throw new Error(`Error ${response.status}: ${response.statusText}`);
-    if (i === totalPages) works.meta.next_cursor = cursor;
+    if (i === totalPages) {
+      works.meta.next_cursor = cursor;
+      works.meta.page = totalPages;
+    }
   }
   works.results = works.results.map((work) => {
     if (work.abstract_inverted_index) work.abstract = convertAbstractArrayToString(work.abstract_inverted_index);
