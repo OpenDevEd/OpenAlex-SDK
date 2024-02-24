@@ -229,6 +229,7 @@ export type Works = {
     page: number;
     per_page: number;
     groups_count: null | number;
+    next_cursor: string;
   };
   results: Work[];
   group_by?: TypeOpenAlex[];
