@@ -68,6 +68,7 @@ export default class OpenAlex {
    *
    * @returns {Promise<Works>} a Promise that resolves to a Works object.
    *
+   * @see {@link SearchParameters} for the search parameters.
    * @see {@link Works} for the returned data structure.
    *
    * @throws {Error} if the response status is not 200.
