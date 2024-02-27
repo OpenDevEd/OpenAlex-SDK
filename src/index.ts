@@ -89,6 +89,23 @@ export default class OpenAlex {
    *    startPage: 1,
    *    endPage: 2,
    *  });
+   *
+   * @example
+   * const res = await openAlex.works({
+   *    search: 'education',
+   *    searchField: 'title',
+   *    perPage: 50,
+   *    filter: {
+   *      has_fulltext: true,
+   *    },
+   *    toJson: 'test100',
+   *    page: 20,
+   *    groupBy: 'publication_year',
+   *    sortBy: {
+   *      field: 'display_name',
+   *      order: 'desc',
+   *    },
+   *  });
    */
   async works(searchParameters: SearchParameters = { perPage: 25, page: 1, retriveAllPages: false }): Promise<Works> {
     const { retriveAllPages, searchField, search, toJson, toCsv, startPage, endPage, filter, groupBy: group_by, sortBy } = searchParameters;
