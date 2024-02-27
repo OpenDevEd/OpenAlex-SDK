@@ -6,8 +6,15 @@ import { ExternalIdsAuthor } from './types/author';
 import { ExternalIdsWork, SearchParameters, Work, Works } from './types/work';
 import { convertToCSV } from './utils/exportCSV';
 import { GET } from './utils/http';
-import { buildUrl, convertAbstractArrayToString, validateParameters } from './utils/works';
-import { appendCursorToUrl, getCursorByPage, handleAllPages, handleMultiplePages } from './utils/cursor';
+import {
+  buildUrl,
+  convertAbstractArrayToString,
+  validateParameters,
+  appendCursorToUrl,
+  getCursorByPage,
+  handleAllPages,
+  handleMultiplePages,
+} from './utils/works';
 
 export default class OpenAlex {
   email: string | null;
