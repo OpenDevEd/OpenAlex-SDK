@@ -47,6 +47,49 @@ export default class OpenAlex {
     }
   }
 
+  /**
+   * The function `works` retrieves a list of works and returns them as a Promise.
+   * @param {SearchParameters} searchParameters - The `searchParameters` parameter is an object that
+   * contains the parameters used to search for works. It is used to retrieve a list of works from the server.
+   * - `search` is a string that represents the search query.
+   * - `searchField` is a string that represents the field to search in.
+   * - `perPage` is a number that represents the number of works to retrieve per page.
+   * - `page` is a number that represents the page number to retrieve.
+   * - `retriveAllPages` is a boolean that represents whether to retrieve all pages.
+   * - `toCsv` is a string that represents the name of the CSV file to save the results to.
+   * - `toJson` is a string that represents the name of the JSON file to save the results to.
+   * - `startPage` is a number that represents the start page to retrieve.
+   * - `endPage` is a number that represents the end page to retrieve.
+   * - `filter` is an object that represents the filter parameters to use.
+   * - `groupBy` is a string that represents the field to group by.
+   * - `sortBy` is a string that represents the field to sort by.
+   *
+   * @remarks Don't use `startPage` and `endPage` with `retriveAllPages` at the same time.
+   *
+   * @returns {Promise<Works>} a Promise that resolves to a Works object.
+   *
+   * @see {@link Works} for the returned data structure.
+   *
+   * @throws {Error} if the response status is not 200.
+   *
+   * @default
+   * perPage=25
+   * page=1
+   * retriveAllPages=false
+   *
+   * @example
+   * const res = await openAlex.works({
+   *    search: 'education',
+   *    searchField: 'title',
+   *    perPage: 1,
+   *    filter: {
+   *      has_fulltext: true,
+   *    },
+   *    toCsv: 'test100',
+   *    startPage: 1,
+   *    endPage: 2,
+   *  });
+   */
   async works(searchParameters: SearchParameters = { perPage: 25, page: 1, retriveAllPages: false }): Promise<Works> {
     const { retriveAllPages, searchField, search, toJson, toCsv, startPage, endPage, filter, groupBy: group_by, sortBy } = searchParameters;
     let { perPage } = searchParameters;
