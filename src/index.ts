@@ -62,7 +62,7 @@ export default class OpenAlex {
    * - `endPage` is a number that represents the end page to retrieve.
    * - `filter` is an object that represents the filter parameters to use.
    * - `groupBy` is a string that represents the field to group by.
-   * - `sortBy` is a string that represents the field to sort by.
+   * - `sortBy` is an object that represents the field to sort by.
    *
    * @remarks Don't use `startPage` and `endPage` with `retriveAllPages` at the same time.
    *
