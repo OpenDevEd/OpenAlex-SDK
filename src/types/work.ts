@@ -2,6 +2,12 @@ import { FilterParameters } from './filterParameters';
 
 export type WorkResult = Work | { error: number; message: string };
 
+/**
+ * The Work type is a TypeScript type that represents a work object.
+ * It is used to represent the data of a work retrieved from the OpenAlex API.
+ * @see {@link https://docs.openalex.org/api-entities/works/work-object OpenAlex API Documentation }
+ * for more information about the works endpoint.
+ */
 export type Work = {
   /** this object get deleted by default and converted to string under abstract */
   abstract_inverted_index?: { [key: string]: number[] };
@@ -82,6 +88,12 @@ export type Work = {
   ngram_tokens?: number;
   term_frequency?: number;
 };
+/**
+ * The Authorship type is a TypeScript type that represents an authorship object.
+ * It is used to represent the data of an authorship retrieved from the OpenAlex API.
+ * @see {@link https://docs.openalex.org/api-entities/works/work-object/authorship-object OpenAlex API Documentation }
+ * for more information about the works endpoint.
+ */
 type Authorship = {
   author: Author;
   author_position?: 'first' | 'last' | 'middle';
@@ -92,11 +104,23 @@ type Authorship = {
   raw_author_name?: string;
 };
 
+/**
+ * The Author type is a TypeScript type that represents an author object.
+ * It is used to represent the data of an author retrieved from the OpenAlex API.
+ * @see {@link https://docs.openalex.org/api-entities/works/work-object/authorship-object OpenAlex API Documentation }
+ * for more information about the authors endpoint.
+ */
 type Author = {
   id: string;
   display_name: string;
   orcid?: string;
 };
+/**
+ * The Institution type is a TypeScript type that represents an institution object.
+ * It is used to represent the data of an institution retrieved from the OpenAlex API.
+ * @see {@link https://docs.openalex.org/api-entities/works/work-object/authorship-object OpenAlex API Documentation }
+ * for more information about the institutions endpoint.
+ */
 type Institution = {
   id: string;
   display_name?: string;

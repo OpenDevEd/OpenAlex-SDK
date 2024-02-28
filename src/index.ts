@@ -47,6 +47,69 @@ export default class OpenAlex {
     }
   }
 
+  /**
+   * The function `works` retrieves a list of works and returns them as a Promise.
+   * @param {SearchParameters} searchParameters - The `searchParameters` parameter is an object that
+   * contains the parameters used to search for works. It is used to retrieve a list of works from the server.
+   * - `search` is a string that represents the search query.
+   * - `searchField` is a string that represents the field to search in.
+   * - `perPage` is a number that represents the number of works to retrieve per page.
+   * - `page` is a number that represents the page number to retrieve.
+   * - `retriveAllPages` is a boolean that represents whether to retrieve all pages.
+   * - `toCsv` is a string that represents the name of the CSV file to save the results to.
+   * - `toJson` is a string that represents the name of the JSON file to save the results to.
+   * - `startPage` is a number that represents the start page to retrieve.
+   * - `endPage` is a number that represents the end page to retrieve.
+   * - `filter` is an object that represents the filter parameters to use.
+   * - `groupBy` is a string that represents the field to group by.
+   * - `sortBy` is an object that represents the field to sort by.
+   *
+   * @remarks Don't use `startPage` and `endPage` with `retriveAllPages` at the same time.
+   *
+   * @returns {Promise<Works>} a Promise that resolves to a Works object.
+   *
+   * @see {@link SearchParameters} for the search parameters.
+   * @see {@link Works} for the returned data structure.
+   *
+   * @throws {Error} if the response status is not 200.
+   *
+   * @default
+   * perPage=25
+   * page=1
+   * retriveAllPages=false
+   *
+   * @example
+   * const res = await openAlex.works({
+   *    search: 'education',
+   *    searchField: 'title',
+   *    perPage: 1,
+   *    filter: {
+   *      has_fulltext: true,
+   *    },
+   *    toCsv: 'test100',
+   *    startPage: 1,
+   *    endPage: 2,
+   *  });
+   *
+   * @example
+   * const res = await openAlex.works({
+   *    search: 'education',
+   *    searchField: 'title',
+   *    perPage: 50,
+   *    filter: {
+   *      has_fulltext: true,
+   *    },
+   *    toJson: 'test100',
+   *    page: 20,
+   *    groupBy: 'publication_year',
+   *    sortBy: {
+   *      field: 'display_name',
+   *      order: 'desc',
+   *    },
+   *  });
+   * @see {@link https://docs.openalex.org/api-entities/works/search-works OpenAlex API Documentation }
+   * for more information about the works endpoint.
+   */
   async works(searchParameters: SearchParameters = { perPage: 25, page: 1, retriveAllPages: false }): Promise<Works> {
     const { retriveAllPages, searchField, search, toJson, toCsv, startPage, endPage, filter, groupBy: group_by, sortBy } = searchParameters;
     let { perPage } = searchParameters;
@@ -94,6 +157,18 @@ export default class OpenAlex {
     }
   }
 
+  /**
+   * The function `autoCpmleteWorks` retrieves a list of works that match the search query
+   * and returns them as a Promise.
+   * @param {string} search - The `search` parameter is a string that represents the search query.
+   * It is used to retrieve a list of works that match the search query from the server.
+   * @returns {Promise<Works>} a Promise that resolves to a Works object.
+   * @throws {Error} if the response status is not 200.
+   * @example
+   * const res = await openAlex.autoCpmleteWorks('education');
+   * @see {@link https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/autocomplete-entities OpenAlex API Documentation }
+   * for more information about the autocomplete endpoint.
+   */
   async autoCpmleteWorks(search: string): Promise<Works> {
     const response: AxiosResponse<Works> = await GET(`${this.url}/autocomplete/works?q=${search}`);
     if (response.status === 200) {
@@ -103,6 +178,17 @@ export default class OpenAlex {
     }
   }
 
+  /**
+   * The function `ngram` retrieves a list of ngrams for a specific work by its ID and returns them as a Promise.
+   *
+   * @param {string} id - The `id` parameter is a string that represents the unique identifier of a
+   * work. It is used to retrieve a list of ngrams for a specific work from the server.
+   * @throws {Error} if the response status is not 200.
+   * @example
+   * const res = await openAlex.ngram('work_id');
+   * @see {@link https://docs.openalex.org/api-entities/works/get-n-grams OpenAlex API Documentation }
+   * for more information about the ngram endpoint.
+   */
   async ngram(id: string) {
     const response: AxiosResponse<Work> = await GET(`${this.url}/works/${id}/ngram`);
     if (response.status === 200) {
@@ -111,6 +197,17 @@ export default class OpenAlex {
       throw new Error(`Error ${response.status}: ${response.statusText}`);
     }
   }
+
+  /**
+   * The function `author` retrieves a specific author by its ID and returns them as a Promise.
+   * @param {string} id - The `id` parameter is a string that represents the unique identifier of an
+   * author. It is used to retrieve a specific author from the server.
+   * @throws {Error} if the response status is not 200.
+   * @example
+   * const res = await openAlex.author('author_id');
+   * @see {@link https://docs.openalex.org/api-entities/authors/get-authors OpenAlex API Documentation }
+   * for more information about the author endpoint.
+   */
   async author(id: string, externalIds: ExternalIdsAuthor) {
     let url = '';
     if (externalIds) url = `${this.url}/authors/${externalIds}:${id}`;
