@@ -1,10 +1,8 @@
-# Openalex TypeScript SDK
-
-This is a TypeScript SDK for interacting with the Openalex API.
+# OpenAlex TypeScript SDK
 
 ## Description
 
-This SDK provides a set of TypeScript interfaces and functions to interact with the Openalex API, making it easier to fetch and manipulate journal information data.
+This SDK provides a set of TypeScript interfaces and functions to interact with the OpenAlex API, making it easier to fetch and manipulate journal information data.
 
 ## Installation
 
