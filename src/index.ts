@@ -155,6 +155,16 @@ export default class OpenAlex {
     }
   }
 
+  /**
+   * The function `autoCpmleteWorks` retrieves a list of works that match the search query
+   * and returns them as a Promise.
+   * @param {string} search - The `search` parameter is a string that represents the search query.
+   * It is used to retrieve a list of works that match the search query from the server.
+   * @returns {Promise<Works>} a Promise that resolves to a Works object.
+   * @throws {Error} if the response status is not 200.
+   * @example
+   * const res = await openAlex.autoCpmleteWorks('education');
+   */
   async autoCpmleteWorks(search: string): Promise<Works> {
     const response: AxiosResponse<Works> = await GET(`${this.url}/autocomplete/works?q=${search}`);
     if (response.status === 200) {
