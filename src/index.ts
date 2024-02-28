@@ -178,6 +178,17 @@ export default class OpenAlex {
     }
   }
 
+  /**
+   * The function `ngram` retrieves a list of ngrams for a specific work by its ID and returns them as a Promise.
+   *
+   * @param {string} id - The `id` parameter is a string that represents the unique identifier of a
+   * work. It is used to retrieve a list of ngrams for a specific work from the server.
+   * @throws {Error} if the response status is not 200.
+   * @example
+   * const res = await openAlex.ngram('work_id');
+   * @see {@link https://docs.openalex.org/api-entities/works/get-n-grams OpenAlex API Documentation }
+   * for more information about the ngram endpoint.
+   */
   async ngram(id: string) {
     const response: AxiosResponse<Work> = await GET(`${this.url}/works/${id}/ngram`);
     if (response.status === 200) {
@@ -186,6 +197,17 @@ export default class OpenAlex {
       throw new Error(`Error ${response.status}: ${response.statusText}`);
     }
   }
+
+  /**
+   * The function `author` retrieves a specific author by its ID and returns them as a Promise.
+   * @param {string} id - The `id` parameter is a string that represents the unique identifier of an
+   * author. It is used to retrieve a specific author from the server.
+   * @throws {Error} if the response status is not 200.
+   * @example
+   * const res = await openAlex.author('author_id');
+   * @see {@link https://docs.openalex.org/api-entities/authors/get-authors OpenAlex API Documentation }
+   * for more information about the author endpoint.
+   */
   async author(id: string, externalIds: ExternalIdsAuthor) {
     let url = '';
     if (externalIds) url = `${this.url}/authors/${externalIds}:${id}`;
