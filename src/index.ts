@@ -107,6 +107,8 @@ export default class OpenAlex {
    *      order: 'desc',
    *    },
    *  });
+   * @see {@link https://docs.openalex.org/api-entities/works/search-works OpenAlex API Documentation }
+   * for more information about the works endpoint.
    */
   async works(searchParameters: SearchParameters = { perPage: 25, page: 1, retriveAllPages: false }): Promise<Works> {
     const { retriveAllPages, searchField, search, toJson, toCsv, startPage, endPage, filter, groupBy: group_by, sortBy } = searchParameters;
@@ -164,6 +166,8 @@ export default class OpenAlex {
    * @throws {Error} if the response status is not 200.
    * @example
    * const res = await openAlex.autoCpmleteWorks('education');
+   * @see {@link https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/autocomplete-entities OpenAlex API Documentation }
+   * for more information about the autocomplete endpoint.
    */
   async autoCpmleteWorks(search: string): Promise<Works> {
     const response: AxiosResponse<Works> = await GET(`${this.url}/autocomplete/works?q=${search}`);
