@@ -344,6 +344,8 @@ const works = await openAlexSDK.works({
 - `to_publication_date`: Filters works by the end date of publication. It is a string representing a date in the format "yyyy-mm-dd".
 - `version`: Filters works by version. It can be 'publishedVersion', 'acceptedVersion', 'submittedVersion', or 'null'.
 
+### Subcategories of Filter Parameters
+
 #### Authorships
 
 `Authorships` is an object that contains authorship details. It has the following properties:
@@ -426,6 +428,32 @@ const works = await openAlexSDK.works({
 - `id`: This is a string that represents the unique identifier for the keyword.
 - `name`: This is a string that represents the name of the keyword.
 - `wikidata`: This is a string that represents the Wikidata ID of the keyword.
+
+#### Open_access
+
+`Open_access` is an object that contains details about the open access status of a document. It has the following properties:
+
+- `any_repository_has_fulltext`: This is a boolean that indicates whether any repository has the full text of the document.
+- `is_oa`: This is a boolean that indicates whether the document is open access (OA).
+- `oa_status`: This is a string that represents the open access status of the document. It can be 'gold', 'green', 'bronze', 'hybrid', or 'closed'.
+
+#### Sustainable_development_goals
+
+`Sustainable_development_goals` is an object that contains details about the sustainable development goals associated with the document. It has the following properties:
+
+- `id`: This is a string that represents the unique identifier for the sustainable development goal.
+
+#### Abstract
+
+`Abstract` is an object that contains details about the abstract of the document. It has the following properties:
+
+- `search`: This is a string that represents the search query for the abstract.
+
+#### Raw_affiliation_string
+
+`Raw_affiliation_string` is an object that contains details about the raw affiliation string of the document. It has the following properties:
+
+- `search`: This is a string that represents the search query for the raw affiliation string.
 
 ## Contributing
 
