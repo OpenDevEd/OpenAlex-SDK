@@ -1,19 +1,18 @@
 // Empty file to make the 'types' directory a module.
 import { AxiosResponse } from 'axios';
-
 import fs from 'fs';
 import { ExternalIdsAuthor } from './types/author';
 import { ExternalIdsWork, SearchParameters, Work, Works } from './types/work';
 import { convertToCSV } from './utils/exportCSV';
 import { GET } from './utils/http';
 import {
+  appendCursorToUrl,
   buildUrl,
   convertAbstractArrayToString,
-  validateParameters,
-  appendCursorToUrl,
   getCursorByPage,
   handleAllPages,
   handleMultiplePages,
+  validateParameters,
 } from './utils/works';
 
 export default class OpenAlex {
@@ -158,18 +157,18 @@ export default class OpenAlex {
   }
 
   /**
-   * The function `autoCpmleteWorks` retrieves a list of works that match the search query
+   * The function `autoCompleteWorks` retrieves a list of works that match the search query
    * and returns them as a Promise.
    * @param {string} search - The `search` parameter is a string that represents the search query.
    * It is used to retrieve a list of works that match the search query from the server.
    * @returns {Promise<Works>} a Promise that resolves to a Works object.
    * @throws {Error} if the response status is not 200.
    * @example
-   * const res = await openAlex.autoCpmleteWorks('education');
+   * const res = await openAlex.autoCompleteWorks('education');
    * @see {@link https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/autocomplete-entities OpenAlex API Documentation }
    * for more information about the autocomplete endpoint.
    */
-  async autoCpmleteWorks(search: string): Promise<Works> {
+  async autoCompleteWorks(search: string): Promise<Works> {
     const response: AxiosResponse<Works> = await GET(`${this.url}/autocomplete/works?q=${search}`);
     if (response.status === 200) {
       return response.data;

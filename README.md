@@ -122,7 +122,7 @@ Retrieves a list of works based on the provided search parameters.
 
 - `searchParameters`: An object containing parameters used to search for works, such as search query, field to search in, number of works per page, page number, and more.
 
-### autoCpmleteWorks(search)
+### autoCompleteWorks(search)
 
 Retrieves a list of works that match the provided search query, intended for autocomplete functionalities.
 
