@@ -84,7 +84,7 @@ git clone https://github.com/OpenDevEd/OpenAlex-SDK.git
 After cloning the repository, navigate to the directory of the Open Alex SDK using your terminal or command prompt. Run the following command to install all necessary dependencies that are defined in the `package.json` file:
 
 ```bash
-cd path/to/openalex-sdk
+cd OpenAlex-SDK
 npm install
 ```
 
