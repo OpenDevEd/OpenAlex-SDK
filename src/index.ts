@@ -34,7 +34,7 @@ export default class OpenAlex {
    * work. It is used to retrieve a specific work from the server.
    * @returns {Promise<Work>}a Promise that resolves to a Work object.
    */
-  async work(id: string, externalIds: ExternalIdsWork): Promise<Work> {
+  async work(id: string, externalIds?: ExternalIdsWork): Promise<Work> {
     let url = '';
     if (externalIds) url = `${this.url}/works/${externalIds}:${id}`;
     else url = `${this.url}/works/${id}`;
