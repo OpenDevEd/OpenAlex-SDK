@@ -64,7 +64,11 @@ export type FilterParameters = {
    * A string representing a date in the format "yyyy-mm-dd".
    */
   to_publication_date?: string;
-  version?: 'publishedVersion' | 'acceptedVersion' | 'submittedVersion' | 'null';
+  version?:
+    | 'publishedVersion'
+    | 'acceptedVersion'
+    | 'submittedVersion'
+    | 'null';
 };
 
 type Authorships = {

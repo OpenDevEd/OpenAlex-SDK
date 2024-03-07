@@ -1,7 +1,7 @@
 // Empty file to make the 'types' directory a module.
 import { AxiosResponse } from 'axios';
 import fs from 'fs';
-import { ExternalIdsAuthor } from './types/author';
+import { Author, ExternalIdsAuthor } from './types/author';
 import { ExternalIdsWork, SearchParameters, Work, Works } from './types/work';
 import { convertToCSV } from './utils/exportCSV';
 import { GET } from './utils/http';
@@ -109,8 +109,25 @@ export default class OpenAlex {
    * @see {@link https://docs.openalex.org/api-entities/works/search-works OpenAlex API Documentation }
    * for more information about the works endpoint.
    */
-  async works(searchParameters: SearchParameters = { perPage: 25, page: 1, retriveAllPages: false }): Promise<Works> {
-    const { retriveAllPages, searchField, search, toJson, toCsv, startPage, endPage, filter, groupBy: group_by, sortBy } = searchParameters;
+  async works(
+    searchParameters: SearchParameters = {
+      perPage: 25,
+      page: 1,
+      retriveAllPages: false,
+    },
+  ): Promise<Works> {
+    const {
+      retriveAllPages,
+      searchField,
+      search,
+      toJson,
+      toCsv,
+      startPage,
+      endPage,
+      filter,
+      groupBy: group_by,
+      sortBy,
+    } = searchParameters;
     let { perPage } = searchParameters;
     let { page } = searchParameters;
     validateParameters(retriveAllPages, startPage, endPage, searchField);
@@ -134,19 +151,33 @@ export default class OpenAlex {
     if (response.status === 200) {
       response.data.meta.page = page || 1;
       response.data.results = response.data.results.map((work) => {
-        if (work.abstract_inverted_index) work.abstract = convertAbstractArrayToString(work.abstract_inverted_index);
+        if (work.abstract_inverted_index)
+          work.abstract = convertAbstractArrayToString(
+            work.abstract_inverted_index,
+          );
         delete work.abstract_inverted_index;
         return work;
       });
       if (startPage && endPage) {
-        return handleMultiplePages(startPage, endPage, url, response, toJson, toCsv);
+        return handleMultiplePages(
+          startPage,
+          endPage,
+          url,
+          response,
+          toJson,
+          toCsv,
+        );
       }
 
       if (retriveAllPages) {
         return handleAllPages(url, response, toJson, toCsv);
       }
 
-      if (toJson) await fs.writeFileSync(`${toJson}.json`, JSON.stringify(response.data, null, 2));
+      if (toJson)
+        await fs.writeFileSync(
+          `${toJson}.json`,
+          JSON.stringify(response.data, null, 2),
+        );
       if (toCsv) {
         convertToCSV(response.data.results, toCsv);
       }
@@ -169,7 +200,9 @@ export default class OpenAlex {
    * for more information about the autocomplete endpoint.
    */
   async autoCompleteWorks(search: string): Promise<Works> {
-    const response: AxiosResponse<Works> = await GET(`${this.url}/autocomplete/works?q=${search}`);
+    const response: AxiosResponse<Works> = await GET(
+      `${this.url}/autocomplete/works?q=${search}`,
+    );
     if (response.status === 200) {
       return response.data;
     } else {
@@ -189,7 +222,9 @@ export default class OpenAlex {
    * for more information about the ngram endpoint.
    */
   async ngram(id: string) {
-    const response: AxiosResponse<Work> = await GET(`${this.url}/works/${id}/ngram`);
+    const response: AxiosResponse<Work> = await GET(
+      `${this.url}/works/${id}/ngram`,
+    );
     if (response.status === 200) {
       return response.data;
     } else {
@@ -207,11 +242,11 @@ export default class OpenAlex {
    * @see {@link https://docs.openalex.org/api-entities/authors/get-authors OpenAlex API Documentation }
    * for more information about the author endpoint.
    */
-  async author(id: string, externalIds: ExternalIdsAuthor) {
+  async author(id: string, externalIds?: ExternalIdsAuthor) {
     let url = '';
     if (externalIds) url = `${this.url}/authors/${externalIds}:${id}`;
     else url = `${this.url}/authors/${id}`;
-    const response: AxiosResponse<Work> = await GET(url);
+    const response: AxiosResponse<Author> = await GET(url);
     if (response.status === 200) {
       return response.data;
     } else {

@@ -273,7 +273,12 @@ export interface SearchParameters {
   sortBy?: SortByWork;
 }
 
-export type SeachField = 'abstract' | 'title' | 'title_and_abstract' | 'display_name' | 'fulltext';
+export type SeachField =
+  | 'abstract'
+  | 'title'
+  | 'title_and_abstract'
+  | 'display_name'
+  | 'fulltext';
 
 //TODO : add group by type
 export type GroupBy =

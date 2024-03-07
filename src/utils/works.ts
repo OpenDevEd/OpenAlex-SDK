@@ -1,10 +1,9 @@
-import { FilterParameters } from 'src/types/filterParameters';
-import { GroupBy, SortByWork } from '../types/work';
 import { AxiosResponse } from 'axios';
-import { Works } from '../types/work';
-import { GET } from './http';
-import { convertToCSV } from './exportCSV';
 import fs from 'fs';
+import { FilterParameters } from 'src/types/filterParameters';
+import { GroupBy, SortByWork, Works } from '../types/work';
+import { convertToCSV } from './exportCSV';
+import { GET } from './http';
 
 /**
  * The function `calculatePages` calculates the total number of pages based on the total number of works and the number of works per page.
@@ -25,9 +24,26 @@ export function calculatePages(pageSize: number, total: number): number {
  * @param {string} searchField - The `searchField` parameter is a string that represents the field to search in.
  * @throws {Error} - Throws an error if the parameters are invalid.
  */
-export function validateParameters(retriveAllPages?: boolean, startPage?: number, endPage?: number, searchField?: string) {
-  if (retriveAllPages && (startPage || endPage)) throw new Error('startPage and endPage are not allowed with retriveAllPages');
-  if (searchField && !['abstract', 'title', 'title_and_abstract', 'display_name', 'fulltext'].includes(searchField))
+export function validateParameters(
+  retriveAllPages?: boolean,
+  startPage?: number,
+  endPage?: number,
+  searchField?: string,
+) {
+  if (retriveAllPages && (startPage || endPage))
+    throw new Error(
+      'startPage and endPage are not allowed with retriveAllPages',
+    );
+  if (
+    searchField &&
+    ![
+      'abstract',
+      'title',
+      'title_and_abstract',
+      'display_name',
+      'fulltext',
+    ].includes(searchField)
+  )
     throw new Error(`Invalid search field: ${searchField}`);
 }
 
@@ -39,9 +55,15 @@ export function validateParameters(retriveAllPages?: boolean, startPage?: number
  * @param {boolean} retriveAllPages - The `retriveAllPages` parameter is a boolean that represents whether to retrieve all pages.
  * @returns {string} a string that represents the URL with the cursor appended.
  */
-export function appendCursorToUrl(url: string, perPage?: number, cursor?: string, retriveAllPages?: boolean): string {
+export function appendCursorToUrl(
+  url: string,
+  perPage?: number,
+  cursor?: string,
+  retriveAllPages?: boolean,
+): string {
   url = perPage ? `${url}&per_page=${perPage}` : url;
-  url = cursor && !retriveAllPages ? `${url}&cursor=${cursor}` : `${url}&cursor=*`;
+  url =
+    cursor && !retriveAllPages ? `${url}&cursor=${cursor}` : `${url}&cursor=*`;
   return url;
 }
 
@@ -69,9 +91,16 @@ export function buildUrl(
   let SortParams = '';
   if (filter) filterParams = filterBuilder(filter);
   if (group_by) GroupByParams = `&group_by=${group_by}`;
-  if (sortBy) SortParams = sortBy.order === 'desc' ? `&sort=${sortBy.field}:${sortBy.order}` : `&sort=${sortBy.field}`;
+  if (sortBy)
+    SortParams =
+      sortBy.order === 'desc'
+        ? `&sort=${sortBy.field}:${sortBy.order}`
+        : `&sort=${sortBy.field}`;
 
-  if (search && searchField) filterParams += filter ? `,${searchField}.search:${search}` : `${searchField}.search:${search}`;
+  if (search && searchField)
+    filterParams += filter
+      ? `,${searchField}.search:${search}`
+      : `${searchField}.search:${search}`;
   if (search && !searchField) SearchParams = `&search=${search}`;
   if (searchField || filter) filterParams = `&filter=${filterParams}`;
   return `${baseUrl}/works?${filterParams}${SearchParams}${GroupByParams}${SortParams}`;
@@ -96,7 +125,11 @@ export function buildUrl(
  * console.log(paths);
  * // Output: { 'a.b.c': 1, 'a.b.d': 2, 'a.e': 3 }
  */
-export function getPaths(obj: { [x: string]: any }, path: string[] = [], result: { [key: string]: any } = {}) {
+export function getPaths(
+  obj: { [x: string]: any },
+  path: string[] = [],
+  result: { [key: string]: any } = {},
+) {
   for (const key in obj) {
     const newPath = [...path, key];
     if (typeof obj[key] === 'object' && obj[key] !== null) {
@@ -115,7 +148,11 @@ export function getPaths(obj: { [x: string]: any }, path: string[] = [], result:
  * @param {number} perPage - The `perPage` parameter is a number that represents the number of works per page.
  * @returns a string that represents the cursor.
  */
-export async function getCursorByPage(page: number = 1, url: string, perPage: number = 25): Promise<string> {
+export async function getCursorByPage(
+  page: number = 1,
+  url: string,
+  perPage: number = 25,
+): Promise<string> {
   if (page === 1) return '*';
 
   let remainingPages = (page - 1) * perPage;
@@ -193,11 +230,15 @@ export async function handleMultiplePages(
     }
   }
   works.results = works.results.map((work) => {
-    if (work.abstract_inverted_index) work.abstract = convertAbstractArrayToString(work.abstract_inverted_index);
+    if (work.abstract_inverted_index)
+      work.abstract = convertAbstractArrayToString(
+        work.abstract_inverted_index,
+      );
     delete work.abstract_inverted_index;
     return work;
   });
-  if (toJson) fs.writeFileSync(`${toJson}.json`, JSON.stringify(works, null, 2));
+  if (toJson)
+    fs.writeFileSync(`${toJson}.json`, JSON.stringify(works, null, 2));
   if (toCsv) convertToCSV(works.results, toCsv);
 
   return works;
@@ -211,7 +252,12 @@ export async function handleMultiplePages(
  * @param {string} toCsv - The `toCsv` parameter is a string that represents the CSV file name.
  * @returns an object that represents the works.
  */
-export async function handleAllPages(url: string, initialResponse: AxiosResponse<Works>, toJson?: string, toCsv?: string) {
+export async function handleAllPages(
+  url: string,
+  initialResponse: AxiosResponse<Works>,
+  toJson?: string,
+  toCsv?: string,
+) {
   const totalPages = calculatePages(200, initialResponse.data.meta.count);
   const works = initialResponse.data;
   let cursor = works.meta.next_cursor;
@@ -230,11 +276,15 @@ export async function handleAllPages(url: string, initialResponse: AxiosResponse
     }
   }
   works.results = works.results.map((work) => {
-    if (work.abstract_inverted_index) work.abstract = convertAbstractArrayToString(work.abstract_inverted_index);
+    if (work.abstract_inverted_index)
+      work.abstract = convertAbstractArrayToString(
+        work.abstract_inverted_index,
+      );
     delete work.abstract_inverted_index;
     return work;
   });
-  if (toJson) fs.writeFileSync(`${toJson}.json`, JSON.stringify(works, null, 2));
+  if (toJson)
+    fs.writeFileSync(`${toJson}.json`, JSON.stringify(works, null, 2));
   if (toCsv) {
     convertToCSV(works.results, toCsv);
   }
@@ -262,8 +312,12 @@ function filterBuilder(filter: FilterParameters) {
  * @param {object} abstract - The `abstract` parameter is an object that represents the abstract array.
  * @returns a string that represents the abstract array as a string.
  */
-export function convertAbstractArrayToString(abstract: { [key: string]: number[] }): string {
-  const entries = Object.entries(abstract).flatMap(([key, value]) => value.map((v) => ({ key, value: v })));
+export function convertAbstractArrayToString(abstract: {
+  [key: string]: number[];
+}): string {
+  const entries = Object.entries(abstract).flatMap(([key, value]) =>
+    value.map((v) => ({ key, value: v })),
+  );
 
   // Sort the array of objects by the value property
   const sortedEntries = entries.sort((a, b) => a.value - b.value);
