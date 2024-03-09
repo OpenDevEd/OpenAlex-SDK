@@ -127,6 +127,7 @@ export default class OpenAlex {
       filter,
       groupBy: group_by,
       sortBy,
+      AbstractArrayToString,
     } = searchParameters;
     let { perPage } = searchParameters;
     let { page } = searchParameters;
@@ -150,14 +151,17 @@ export default class OpenAlex {
 
     if (response.status === 200) {
       response.data.meta.page = page || 1;
-      response.data.results = response.data.results.map((work) => {
-        if (work.abstract_inverted_index)
-          work.abstract = convertAbstractArrayToString(
-            work.abstract_inverted_index,
-          );
-        delete work.abstract_inverted_index;
-        return work;
-      });
+
+      if (AbstractArrayToString) {
+        response.data.results = response.data.results.map((work) => {
+          if (work.abstract_inverted_index)
+            work.abstract = convertAbstractArrayToString(
+              work.abstract_inverted_index,
+            );
+          delete work.abstract_inverted_index;
+          return work;
+        });
+      }
       if (startPage && endPage) {
         return handleMultiplePages(
           startPage,
@@ -166,11 +170,18 @@ export default class OpenAlex {
           response,
           toJson,
           toCsv,
+          AbstractArrayToString,
         );
       }
 
       if (retriveAllPages) {
-        return handleAllPages(url, response, toJson, toCsv);
+        return handleAllPages(
+          url,
+          response,
+          toJson,
+          toCsv,
+          AbstractArrayToString,
+        );
       }
 
       if (toJson)

@@ -214,6 +214,7 @@ export async function handleMultiplePages(
   initialResponse: AxiosResponse<Works>,
   toJson?: string,
   toCsv?: string,
+  AbstractArrayToString?: boolean,
 ) {
   const works = initialResponse.data;
   let cursor = works.meta.next_cursor;
@@ -229,14 +230,16 @@ export async function handleMultiplePages(
       works.meta.page = endPage;
     }
   }
-  works.results = works.results.map((work) => {
-    if (work.abstract_inverted_index)
-      work.abstract = convertAbstractArrayToString(
-        work.abstract_inverted_index,
-      );
-    delete work.abstract_inverted_index;
-    return work;
-  });
+  if (AbstractArrayToString) {
+    works.results = works.results.map((work) => {
+      if (work.abstract_inverted_index)
+        work.abstract = convertAbstractArrayToString(
+          work.abstract_inverted_index,
+        );
+      delete work.abstract_inverted_index;
+      return work;
+    });
+  }
   if (toJson)
     fs.writeFileSync(`${toJson}.json`, JSON.stringify(works, null, 2));
   if (toCsv) convertToCSV(works.results, toCsv);
@@ -257,6 +260,7 @@ export async function handleAllPages(
   initialResponse: AxiosResponse<Works>,
   toJson?: string,
   toCsv?: string,
+  AbstractArrayToString?: boolean,
 ) {
   const totalPages = calculatePages(200, initialResponse.data.meta.count);
   const works = initialResponse.data;
@@ -275,14 +279,16 @@ export async function handleAllPages(
       works.meta.page = totalPages;
     }
   }
-  works.results = works.results.map((work) => {
-    if (work.abstract_inverted_index)
-      work.abstract = convertAbstractArrayToString(
-        work.abstract_inverted_index,
-      );
-    delete work.abstract_inverted_index;
-    return work;
-  });
+  if (AbstractArrayToString) {
+    works.results = works.results.map((work) => {
+      if (work.abstract_inverted_index)
+        work.abstract = convertAbstractArrayToString(
+          work.abstract_inverted_index,
+        );
+      delete work.abstract_inverted_index;
+      return work;
+    });
+  }
   if (toJson)
     fs.writeFileSync(`${toJson}.json`, JSON.stringify(works, null, 2));
   if (toCsv) {

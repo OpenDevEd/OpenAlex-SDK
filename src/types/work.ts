@@ -271,6 +271,7 @@ export interface SearchParameters {
   filter?: FilterParameters;
   groupBy?: GroupBy;
   sortBy?: SortByWork;
+  AbstractArrayToString?: boolean;
 }
 
 export type SeachField =
