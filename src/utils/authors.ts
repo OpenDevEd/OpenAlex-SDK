@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios';
 import fs from 'fs';
-import { Authors, GroupBy, SortByWork } from 'src/types/author';
+import { Authors, GroupBy, SortByAuthor } from 'src/types/author';
 import { AuthorFilterParameters } from 'src/types/authorFilterParameters';
 import { convertToCSV } from './exportCSV';
 import { GET } from './http';
@@ -63,7 +63,7 @@ export function appendCursorToUrl(
  * @param {string} searchField - The `searchField` parameter is a string that represents the field to search in.
  * @param {AuthorFilterParameters} filter - The `filter` parameter is an object that represents the filter parameters.
  * @param {GroupBy} group_by - The `group_by` parameter is a string that represents the field to group by.
- * @param {SortByWork} sortBy - The `sortBy` parameter is an object that represents the sort parameters.
+ * @param {SortByAuthor} sortBy - The `sortBy` parameter is an object that represents the sort parameters.
  * @returns {string} a string that represents the URL.
  */
 export function buildAuthorsUrl(
@@ -72,7 +72,7 @@ export function buildAuthorsUrl(
   searchField?: string,
   filter?: AuthorFilterParameters,
   group_by?: GroupBy,
-  sortBy?: SortByWork,
+  sortBy?: SortByAuthor,
 ): string {
   let filterParams = '';
   let SearchParams = '';

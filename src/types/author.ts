@@ -96,7 +96,7 @@ export type AuthorsSearchParameters = {
   endPage?: number;
   filter?: AuthorFilterParameters;
   groupBy?: GroupBy;
-  sortBy?: SortByWork;
+  sortBy?: SortByAuthor;
   AbstractArrayToString?: boolean;
 };
 export type SeachField = 'display_name';
@@ -120,7 +120,7 @@ export type GroupBy =
   | 'summary_stats.h_index'
   | 'summary_stats.i10_index'
   | 'works_count';
-export type SortByWork = {
+export type SortByAuthor = {
   field:
     | 'display_name'
     | 'cited_by_count'
