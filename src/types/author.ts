@@ -65,7 +65,7 @@ type Meta = {
   db_response_time_ms: number;
   page?: number;
   per_page: number;
-  next_cursor?: string;
+  next_cursor: string;
   groups_count?: number;
 };
 
@@ -76,7 +76,7 @@ type SummaryStats = {
   h_index: number;
   i10_index: number;
 };
-export type SearchParameters = {
+export type AuthorsSearchParameters = {
   /**
    *The best way to search for authors is to use the search query parameter, which searches the display_name and the display_name_alternatives fields. Example:
 
