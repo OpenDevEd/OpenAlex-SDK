@@ -1,4 +1,4 @@
-import { FilterParameters } from './filterParameters';
+import { WorkfilterParameters } from './filterParameters';
 
 export type WorkResult = Work | { error: number; message: string };
 
@@ -268,7 +268,7 @@ export interface SearchParameters {
   toJson?: string;
   startPage?: number;
   endPage?: number;
-  filter?: FilterParameters;
+  filter?: WorkfilterParameters;
   groupBy?: GroupBy;
   sortBy?: SortByWork;
   AbstractArrayToString?: boolean;

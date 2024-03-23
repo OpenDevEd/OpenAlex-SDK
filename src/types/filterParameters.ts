@@ -1,5 +1,5 @@
 import { Apc_payment, KeyTypeOpenAlex, TypeCrossRef } from './work';
-export type FilterParameters = {
+export type WorkfilterParameters = {
   authorships?: Authorships | Authorships[];
   apc_list?: Apc_payment | Apc_payment[];
   apc_paid?: Apc_payment | Apc_payment[];

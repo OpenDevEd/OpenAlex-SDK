@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios';
 import fs from 'fs';
-import { FilterParameters } from 'src/types/filterParameters';
+import { WorkfilterParameters } from 'src/types/filterParameters';
 import { GroupBy, SortByWork, Works } from '../types/work';
 import { convertToCSV } from './exportCSV';
 import { GET } from './http';
@@ -72,7 +72,7 @@ export function appendCursorToUrl(
  * @param {string} baseUrl - The `baseUrl` parameter is a string that represents the base URL.
  * @param {string} search - The `search` parameter is a string that represents the search query.
  * @param {string} searchField - The `searchField` parameter is a string that represents the field to search in.
- * @param {FilterParameters} filter - The `filter` parameter is an object that represents the filter parameters.
+ * @param {WorkfilterParameters} filter - The `filter` parameter is an object that represents the filter parameters.
  * @param {GroupBy} group_by - The `group_by` parameter is a string that represents the field to group by.
  * @param {SortByWork} sortBy - The `sortBy` parameter is an object that represents the sort parameters.
  * @returns {string} a string that represents the URL.
@@ -81,7 +81,7 @@ export function buildUrl(
   baseUrl: string,
   search?: string,
   searchField?: string,
-  filter?: FilterParameters,
+  filter?: WorkfilterParameters,
   group_by?: GroupBy,
   sortBy?: SortByWork,
 ): string {
@@ -315,10 +315,10 @@ export async function handleAllPages(
 
 /**
  * The function `filterBuilder` builds the filter string.
- * @param {FilterParameters} filter - The `filter` parameter is an object that represents the filter parameters.
+ * @param {WorkfilterParameters} filter - The `filter` parameter is an object that represents the filter parameters.
  * @returns a string that represents the filter string.
  */
-function filterBuilder(filter: FilterParameters) {
+function filterBuilder(filter: WorkfilterParameters) {
   let filterString = '';
   const filterObject = getPaths(filter);
 
