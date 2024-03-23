@@ -1,4 +1,4 @@
-import { WorkfilterParameters } from './filterParameters';
+import { WorkfilterParameters } from './workFilterParameters';
 
 export type WorkResult = Work | { error: number; message: string };
 

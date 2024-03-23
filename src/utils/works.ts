@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios';
 import fs from 'fs';
-import { WorkfilterParameters } from 'src/types/filterParameters';
+import { WorkfilterParameters } from 'src/types/workFilterParameters';
 import { GroupBy, SortByWork, Works } from '../types/work';
 import { convertToCSV } from './exportCSV';
 import { GET } from './http';
