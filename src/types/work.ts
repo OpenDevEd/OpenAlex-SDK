@@ -1,4 +1,4 @@
-import { FilterParameters } from './filterParameters';
+import { WorkfilterParameters } from './workFilterParameters';
 
 export type WorkResult = Work | { error: number; message: string };
 
@@ -258,7 +258,7 @@ export type Works = {
   results: Work[];
   group_by?: TypeOpenAlex[];
 };
-export interface SearchParameters {
+export type SearchParameters = {
   search?: string;
   searchField?: SeachField;
   perPage?: number;
@@ -268,12 +268,18 @@ export interface SearchParameters {
   toJson?: string;
   startPage?: number;
   endPage?: number;
-  filter?: FilterParameters;
+  filter?: WorkfilterParameters;
   groupBy?: GroupBy;
   sortBy?: SortByWork;
-}
+  AbstractArrayToString?: boolean;
+};
 
-export type SeachField = 'abstract' | 'title' | 'title_and_abstract' | 'display_name' | 'fulltext';
+export type SeachField =
+  | 'abstract'
+  | 'title'
+  | 'title_and_abstract'
+  | 'display_name'
+  | 'fulltext';
 
 //TODO : add group by type
 export type GroupBy =

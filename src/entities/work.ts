@@ -1,5 +1,16 @@
 import { KeyTypeOpenAlex, TypeCrossRef } from '../types/work';
-import { Column, PrimaryGeneratedColumn, Entity, OneToMany, PrimaryColumn, ManyToOne, ManyToMany, JoinTable, OneToOne, JoinColumn } from 'typeorm';
+import {
+  Column,
+  PrimaryGeneratedColumn,
+  Entity,
+  OneToMany,
+  PrimaryColumn,
+  ManyToOne,
+  ManyToMany,
+  JoinTable,
+  OneToOne,
+  JoinColumn,
+} from 'typeorm';
 
 @Entity()
 export class Work {

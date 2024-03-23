@@ -1,7 +1,7 @@
 import { AxiosResponse } from 'axios';
 import fs from 'fs';
-import { WorkfilterParameters } from 'src/types/workFilterParameters';
-import { GroupBy, SortByWork, Works } from '../types/work';
+import { Authors, GroupBy, SortByAuthor } from 'src/types/author';
+import { AuthorFilterParameters } from 'src/types/authorFilterParameters';
 import { convertToCSV } from './exportCSV';
 import { GET } from './http';
 
@@ -24,7 +24,7 @@ export function calculatePages(pageSize: number, total: number): number {
  * @param {string} searchField - The `searchField` parameter is a string that represents the field to search in.
  * @throws {Error} - Throws an error if the parameters are invalid.
  */
-export function validateParameters(
+export function validateAuthorParameters(
   retriveAllPages?: boolean,
   startPage?: number,
   endPage?: number,
@@ -34,19 +34,9 @@ export function validateParameters(
     throw new Error(
       'startPage and endPage are not allowed with retriveAllPages',
     );
-  if (
-    searchField &&
-    ![
-      'abstract',
-      'title',
-      'title_and_abstract',
-      'display_name',
-      'fulltext',
-    ].includes(searchField)
-  )
+  if (searchField && !['display_name'].includes(searchField))
     throw new Error(`Invalid search field: ${searchField}`);
 }
-
 /**
  * The function `appendCursorToUrl` appends the cursor to the URL.
  * @param {string} url - The `url` parameter is a string that represents the URL.
@@ -66,24 +56,23 @@ export function appendCursorToUrl(
     cursor && !retriveAllPages ? `${url}&cursor=${cursor}` : `${url}&cursor=*`;
   return url;
 }
-
 /**
  * The function `buildUrl` builds the URL based on the search parameters.
  * @param {string} baseUrl - The `baseUrl` parameter is a string that represents the base URL.
  * @param {string} search - The `search` parameter is a string that represents the search query.
  * @param {string} searchField - The `searchField` parameter is a string that represents the field to search in.
- * @param {WorkfilterParameters} filter - The `filter` parameter is an object that represents the filter parameters.
+ * @param {AuthorFilterParameters} filter - The `filter` parameter is an object that represents the filter parameters.
  * @param {GroupBy} group_by - The `group_by` parameter is a string that represents the field to group by.
- * @param {SortByWork} sortBy - The `sortBy` parameter is an object that represents the sort parameters.
+ * @param {SortByAuthor} sortBy - The `sortBy` parameter is an object that represents the sort parameters.
  * @returns {string} a string that represents the URL.
  */
-export function buildUrl(
+export function buildAuthorsUrl(
   baseUrl: string,
   search?: string,
   searchField?: string,
-  filter?: WorkfilterParameters,
+  filter?: AuthorFilterParameters,
   group_by?: GroupBy,
-  sortBy?: SortByWork,
+  sortBy?: SortByAuthor,
 ): string {
   let filterParams = '';
   let SearchParams = '';
@@ -103,9 +92,8 @@ export function buildUrl(
       : `${searchField}.search:${search}`;
   if (search && !searchField) SearchParams = `&search=${search}`;
   if (searchField || filter) filterParams = `&filter=${filterParams}`;
-  return `${baseUrl}/works?${filterParams}${SearchParams}${GroupByParams}${SortParams}`;
+  return `${baseUrl}/authors?${filterParams}${SearchParams}${GroupByParams}${SortParams}`;
 }
-
 /**
  * The function `getPaths` gets the paths of an object.
  * @param {object} obj - The `obj` parameter is an object.
@@ -156,7 +144,6 @@ export function getPaths(
   }
   return result;
 }
-
 /**
  * The function `getCursorByPage` take a page number and a URL and returns the cursor.
  * @param {number} page - The `page` parameter is a number that represents the page number.
@@ -184,7 +171,7 @@ export async function getCursorByPage(
 
   let new_url = appendCursorToUrl(url, cursorPage, '*', false);
 
-  let response: AxiosResponse<Works> = await GET(new_url);
+  let response: AxiosResponse<Authors> = await GET(new_url);
 
   if (response.status !== 200) {
     throw new Error(`Error ${response.status}: ${response.statusText}`);
@@ -212,113 +199,95 @@ export async function getCursorByPage(
   }
   return cursor;
 }
-
 /**
  * The function `handleMultiplePages` handles multiple pages.
  * @param {number} startPage - The `startPage` parameter is a number that represents the start page number.
  * @param {number} endPage - The `endPage` parameter is a number that represents the end page number.
  * @param {string} url - The `url` parameter is a string that represents the URL.
- * @param {AxiosResponse<Works>} initialResponse - The `initialResponse` parameter is an object that represents the initial response.
+ * @param {AxiosResponse<Authors>} initialResponse - The `initialResponse` parameter is an object that represents the initial response.
  * @param {string} toJson - The `toJson` parameter is a string that represents the JSON file name.
  * @param {string} toCsv - The `toCsv` parameter is a string that represents the CSV file name.
  * @returns an object that represents the works.
  */
-export async function handleMultiplePages(
+export async function handleMultipleAuthorsPages(
   startPage: number,
   endPage: number,
   url: string,
-  initialResponse: AxiosResponse<Works>,
+  initialResponse: AxiosResponse<Authors>,
   toJson?: string,
   toCsv?: string,
-  AbstractArrayToString?: boolean,
 ) {
-  const works = initialResponse.data;
-  let cursor = works.meta.next_cursor;
+  const authors = initialResponse.data;
+  let cursor = authors.meta.next_cursor;
   url = url.split('&cursor')[0];
   for (let i = startPage + 1; i <= endPage; i++) {
-    const response: AxiosResponse<Works> = await GET(`${url}&cursor=${cursor}`);
+    const response: AxiosResponse<Authors> = await GET(
+      `${url}&cursor=${cursor}`,
+    );
     if (response.status === 200) {
-      works.results = works.results.concat(response.data.results);
+      authors.results = authors.results.concat(response.data.results);
       cursor = response.data.meta.next_cursor;
     } else throw new Error(`Error ${response.status}: ${response.statusText}`);
     if (i === endPage) {
-      works.meta.next_cursor = cursor;
-      works.meta.page = endPage;
+      authors.meta.next_cursor = cursor;
+      authors.meta.page = endPage;
     }
   }
-  if (AbstractArrayToString) {
-    works.results = works.results.map((work) => {
-      if (work.abstract_inverted_index)
-        work.abstract = convertAbstractArrayToString(
-          work.abstract_inverted_index,
-        );
-      delete work.abstract_inverted_index;
-      return work;
-    });
-  }
   if (toJson)
-    fs.writeFileSync(`${toJson}.json`, JSON.stringify(works, null, 2));
-  if (toCsv) convertToCSV(works.results, toCsv);
+    fs.writeFileSync(`${toJson}.json`, JSON.stringify(authors, null, 2));
+  if (toCsv) convertToCSV(authors.results, toCsv);
 
-  return works;
+  return authors;
 }
 
 /**
  * The function `handleAllPages` handles all pages.
  * @param {string} url - The `url` parameter is a string that represents the URL.
- * @param {AxiosResponse<Works>} initialResponse - The `initialResponse` parameter is an object that represents the initial response.
+ * @param {AxiosResponse<Authors>} initialResponse - The `initialResponse` parameter is an object that represents the initial response.
  * @param {string} toJson - The `toJson` parameter is a string that represents the JSON file name.
  * @param {string} toCsv - The `toCsv` parameter is a string that represents the CSV file name.
  * @returns an object that represents the works.
  */
-export async function handleAllPages(
+export async function handleAllAuthorsPages(
   url: string,
-  initialResponse: AxiosResponse<Works>,
+  initialResponse: AxiosResponse<Authors>,
   toJson?: string,
   toCsv?: string,
-  AbstractArrayToString?: boolean,
 ) {
   const totalPages = calculatePages(200, initialResponse.data.meta.count);
-  const works = initialResponse.data;
-  let cursor = works.meta.next_cursor;
+  const authors = initialResponse.data;
+  let cursor = authors.meta.next_cursor;
   console.log('total number of pages ', totalPages);
   console.log('page', 1, 'response', initialResponse.status);
   for (let i = 2; i <= totalPages; i++) {
-    const response: AxiosResponse<Works> = await GET(`${url}&cursor=${cursor}`);
+    const response: AxiosResponse<Authors> = await GET(
+      `${url}&cursor=${cursor}`,
+    );
     console.log('page', i, 'response', response.status);
     if (response.status === 200) {
-      works.results = works.results.concat(response.data.results);
+      authors.results = authors.results.concat(response.data.results);
       cursor = response.data.meta.next_cursor;
     } else throw new Error(`Error ${response.status}: ${response.statusText}`);
     if (i === totalPages) {
-      works.meta.next_cursor = cursor;
-      works.meta.page = totalPages;
+      authors.meta.next_cursor = cursor;
+      authors.meta.page = totalPages;
     }
   }
-  if (AbstractArrayToString) {
-    works.results = works.results.map((work) => {
-      if (work.abstract_inverted_index)
-        work.abstract = convertAbstractArrayToString(
-          work.abstract_inverted_index,
-        );
-      delete work.abstract_inverted_index;
-      return work;
-    });
-  }
+
   if (toJson)
-    fs.writeFileSync(`${toJson}.json`, JSON.stringify(works, null, 2));
+    fs.writeFileSync(`${toJson}.json`, JSON.stringify(authors, null, 2));
   if (toCsv) {
-    convertToCSV(works.results, toCsv);
+    convertToCSV(authors.results, toCsv);
   }
-  return works;
+  return authors;
 }
 
 /**
  * The function `filterBuilder` builds the filter string.
- * @param {WorkfilterParameters} filter - The `filter` parameter is an object that represents the filter parameters.
+ * @param {AuthorFilterParameters} filter - The `filter` parameter is an object that represents the filter parameters.
  * @returns a string that represents the filter string.
  */
-function filterBuilder(filter: WorkfilterParameters) {
+function filterBuilder(filter: AuthorFilterParameters) {
   let filterString = '';
   const filterObject = getPaths(filter);
 
@@ -331,26 +300,4 @@ function filterBuilder(filter: WorkfilterParameters) {
   }
   filterString = filterString.slice(0, -1);
   return filterString;
-}
-
-/**
- * The function `convertAbstractArrayToString` converts an abstract array to a string.
- * @param {object} abstract - The `abstract` parameter is an object that represents the abstract array.
- * @returns a string that represents the abstract array as a string.
- */
-export function convertAbstractArrayToString(abstract: {
-  [key: string]: number[];
-}): string {
-  const entries = Object.entries(abstract).flatMap(([key, value]) =>
-    value.map((v) => ({ key, value: v })),
-  );
-
-  // Sort the array of objects by the value property
-  const sortedEntries = entries.sort((a, b) => a.value - b.value);
-
-  // Extract the key from each sorted object
-  const keys = sortedEntries.map((entry) => entry.key);
-
-  // Join these keys into a single string separated by spaces
-  return keys.join(' ');
 }
