@@ -1,4 +1,4 @@
-export type AuthorfilterParameters = {
+export type AuthorFilterParameters = {
   affiliation?: Affiliation | Affiliation[];
   cited_by_count?: number | number[];
   ids?: Ids | Ids[];

@@ -258,7 +258,7 @@ export type Works = {
   results: Work[];
   group_by?: TypeOpenAlex[];
 };
-export interface SearchParameters {
+export type SearchParameters = {
   search?: string;
   searchField?: SeachField;
   perPage?: number;
@@ -272,7 +272,7 @@ export interface SearchParameters {
   groupBy?: GroupBy;
   sortBy?: SortByWork;
   AbstractArrayToString?: boolean;
-}
+};
 
 export type SeachField =
   | 'abstract'
