@@ -5,11 +5,7 @@ export type Author = {
   display_name_alternatives?: string[];
   works_count: number;
   cited_by_count: number;
-  summary_stats: {
-    '2yr_mean_citedness': number;
-    h_index: number;
-    i10_index: number;
-  };
+  summary_stats: SummaryStats;
   ids: Ids;
   affiliations: Affiliation[];
   last_known_institution: Institution;
@@ -73,3 +69,9 @@ type Meta = {
 };
 
 export type ExternalIdsAuthor = 'orcid' | 'scopus' | 'twitter' | 'wikipedia';
+
+type SummaryStats = {
+  '2yr_mean_citedness': number;
+  h_index: number;
+  i10_index: number;
+};
