@@ -1,4 +1,4 @@
-export interface Author {
+export type Author = {
   id: string;
   orcid?: string;
   display_name?: string;
@@ -19,17 +19,17 @@ export interface Author {
   works_api_url: string;
   updated_date: string;
   created_date: string;
-}
+};
 
-interface Ids {
+type Ids = {
   openalex: string;
   orcid?: string;
   scopus?: string;
   twitter?: string;
   wikipedia?: string;
-}
+};
 
-interface Institution {
+type Institution = {
   id: string;
   ror: string;
   display_name: string;
@@ -37,39 +37,39 @@ interface Institution {
   type: string;
   lineage: string[];
   years?: number[];
-}
+};
 
-interface Affiliation {
+type Affiliation = {
   institution: Institution;
   years: number[];
-}
+};
 
-interface Concept {
+type Concept = {
   id: string;
   wikidata: string;
   display_name: string;
   level: number;
   score: number;
-}
+};
 
-interface PublicationYear {
+type PublicationYear = {
   year: number;
   works_count: number;
   cited_by_count: number;
-}
+};
 
-export interface Authors {
+export type Authors = {
   results: Author[];
   meta: Meta;
-}
+};
 
-interface Meta {
+type Meta = {
   count: number;
   db_response_time_ms: number;
   page?: number;
   per_page: number;
   next_cursor?: string;
   groups_count?: number;
-}
+};
 
 export type ExternalIdsAuthor = 'orcid' | 'scopus' | 'twitter' | 'wikipedia';
