@@ -10,7 +10,12 @@ import OpenAlex from '../src/index';
     searchField: 'title',
     perPage: 1,
     filter: {
-      sustainable_development_goals: { id: 'https://metadata.un.org/sdg/4' },
+      sustainable_development_goals: [
+        { id: 'https://metadata.un.org/sdg/4' },
+        { id: 'https://metadata.un.org/sdg/5' },
+        { id: 'https://metadata.un.org/sdg/6' },
+      ],
+      open_access: { is_oa: true },
     },
     startPage: 1,
     endPage: 2,

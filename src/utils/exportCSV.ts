@@ -28,7 +28,10 @@ function flattenObject(obj: any, parentKey = '', depth = 0): FlattenedObject {
         // General array handling
         value.forEach((item, index) => {
           if (typeof item === 'object' && item !== null) {
-            Object.assign(flattened, flattenObject(item, `${newKey}[${index}]`, depth + 1));
+            Object.assign(
+              flattened,
+              flattenObject(item, `${newKey}[${index}]`, depth + 1),
+            );
           } else {
             flattened[`${newKey}[${index}]`] = item.toString();
           }

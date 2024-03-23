@@ -132,10 +132,26 @@ export function getPaths(
 ) {
   for (const key in obj) {
     const newPath = [...path, key];
-    if (typeof obj[key] === 'object' && obj[key] !== null) {
+    if (Array.isArray(obj[key])) {
+      obj[key].forEach((item: any) => {
+        if (typeof item === 'object' && item !== null) {
+          getPaths(item, newPath, result);
+        } else {
+          const joinedPath = newPath.join('.');
+          if (!result[joinedPath]) {
+            result[joinedPath] = [];
+          }
+          result[joinedPath].push(item);
+        }
+      });
+    } else if (typeof obj[key] === 'object' && obj[key] !== null) {
       getPaths(obj[key], newPath, result);
     } else {
-      result[newPath.join('.')] = obj[key];
+      const joinedPath = newPath.join('.');
+      if (!result[joinedPath]) {
+        result[joinedPath] = [];
+      }
+      result[joinedPath].push(obj[key]);
     }
   }
   return result;
@@ -307,7 +323,11 @@ function filterBuilder(filter: FilterParameters) {
   const filterObject = getPaths(filter);
 
   for (const key in filterObject) {
-    filterString = `${filterString}${key}:${filterObject[key]},`;
+    if (Array.isArray(filterObject[key])) {
+      filterString = `${filterString}${key}:${filterObject[key].join('|')},`;
+    } else {
+      filterString = `${filterString}${key}:${filterObject[key]},`;
+    }
   }
   filterString = filterString.slice(0, -1);
   return filterString;
