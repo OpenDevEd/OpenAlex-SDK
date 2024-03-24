@@ -376,6 +376,6 @@ export type SortByWork = {
     | 'works_count'
     | 'publication_date'
     /**  relevance_score (only exists if there's a search filter active) */
-    | 'relevance_score ';
+    | 'relevance_score';
   order: 'asc' | 'desc';
 };
