@@ -1,3 +1,5 @@
+import { SourceFilterParameters } from './sourceFilterParameters';
+
 export type Source = {
   abbreviated_title: string;
   alternate_titles: string[];
@@ -96,6 +98,7 @@ export type SearchParametersSource = {
   toCsv?: string;
   toJson?: string;
   startPage?: number;
+  filter?: SourceFilterParameters;
   endPage?: number;
   groupBy?: GroupBySource;
   sortBy?: SortBySource;
