@@ -84,3 +84,31 @@ export type GroupBySource =
   | 'summary_stats.i10_index'
   | 'type'
   | 'works_count';
+
+export type SeachFieldSource = 'display_name';
+
+export type SearchParametersSource = {
+  search?: string;
+  searchField?: SeachFieldSource;
+  perPage?: number;
+  page?: number;
+  retriveAllPages?: boolean;
+  toCsv?: string;
+  toJson?: string;
+  startPage?: number;
+  endPage?: number;
+  groupBy?: GroupBySource;
+  sortBy?: SortBySource;
+  AbstractArrayToString?: boolean;
+};
+
+export type SortBySource = {
+  field:
+    | 'display_name'
+    | 'cited_by_count'
+    | 'works_count'
+    | 'publication_date'
+    /**  relevance_score (only exists if there's a search filter active) */
+    | 'relevance_score';
+  order: 'asc' | 'desc';
+};
