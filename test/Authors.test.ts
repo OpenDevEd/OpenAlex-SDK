@@ -1,4 +1,5 @@
 import axios from 'axios';
+import fs from 'fs';
 import OpenAlex from '../src/index';
 describe('get single author', () => {
   test('get author ', async () => {
@@ -24,10 +25,11 @@ describe('get multiple authors', () => {
   test('get simple ', async () => {
     const openAlex = new OpenAlex();
     const res = await openAlex.authors({
+      search: 'john smith',
       perPage: 50,
     });
     const openAlexRes = await axios.get(
-      'https://api.openalex.org/authors?per-page=50',
+      'https://api.openalex.org/authors?per-page=50&search=john%20smith',
     );
     expect(res.results).toEqual(openAlexRes.data.results);
   });
@@ -184,5 +186,32 @@ describe('get multiple authors', () => {
       'https://api.openalex.org/authors?search=john%20smith&sort=cited_by_count:desc&cursor=*',
     );
     expect(res.results).toEqual(openAlexRes.data.results);
+  });
+});
+
+// test saving files
+describe('save authors to csv', () => {
+  test('save authors to csv', async () => {
+    const openAlex = new OpenAlex();
+    await openAlex.authors({
+      perPage: 50,
+      toCsv: 'authors',
+    });
+    // check if file exists
+    expect(fs.existsSync('authors.csv')).toBe(true);
+    // delete the file
+    fs.unlinkSync('authors.csv');
+  });
+  // save authors to json
+  test('save authors to json', async () => {
+    const openAlex = new OpenAlex();
+    await openAlex.authors({
+      perPage: 50,
+      toJson: 'authors',
+    });
+    // check if file exists
+    expect(fs.existsSync('authors.json')).toBe(true);
+    // delete the file
+    fs.unlinkSync('authors.json');
   });
 });
