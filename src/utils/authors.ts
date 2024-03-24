@@ -152,14 +152,14 @@ export function getPaths(
  * @returns a string that represents the cursor.
  */
 export async function getCursorByPage(
-  page: number = 1,
   url: string,
+  page: number = 1,
   perPage: number = 25,
 ): Promise<string> {
   if (page === 1) return '*';
 
   let remainingPages = (page - 1) * perPage;
-  let cursorPage = remainingPages;
+  let cursorPage;
 
   if (remainingPages <= 200) {
     cursorPage = remainingPages;

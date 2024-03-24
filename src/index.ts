@@ -145,7 +145,7 @@ export default class OpenAlex {
     validateParameters(retriveAllPages, startPage, endPage, searchField);
 
     let url = buildUrl(this.url, search, searchField, filter, group_by, sortBy);
-    let cursor = await getCursorByPage(page, url, perPage);
+    let cursor = await getCursorByPage(url, page, perPage);
     if (retriveAllPages) {
       perPage = 200;
       cursor = '*';
@@ -153,7 +153,7 @@ export default class OpenAlex {
 
     if (startPage && endPage) {
       page = startPage;
-      cursor = await getCursorByPage(startPage, url, perPage);
+      cursor = await getCursorByPage(url, startPage, perPage);
     }
 
     url = appendCursorToUrl(url, perPage, cursor, retriveAllPages);
@@ -161,7 +161,7 @@ export default class OpenAlex {
     const response: AxiosResponse<Works> = await GET(url);
 
     if (response.status === 200) {
-      response.data.meta.page = page || 1;
+      response.data.meta.page = page ?? 1;
 
       if (AbstractArrayToString) {
         response.data.results = response.data.results.map((work) => {
@@ -196,7 +196,7 @@ export default class OpenAlex {
       }
 
       if (toJson)
-        await fs.writeFileSync(
+        fs.writeFileSync(
           `${toJson}.json`,
           JSON.stringify(response.data, null, 2),
         );
@@ -369,7 +369,7 @@ export default class OpenAlex {
       groupBy,
       sortBy,
     );
-    let cursor = await getCursorByPage(page, url, perPage);
+    let cursor = await getCursorByPage(url, page, perPage);
     if (retriveAllPages) {
       perPage = 200;
       cursor = '*';
@@ -377,7 +377,7 @@ export default class OpenAlex {
 
     if (startPage && endPage) {
       page = startPage;
-      cursor = await getCursorByPage(startPage, url, perPage);
+      cursor = await getCursorByPage(url, startPage, perPage);
     }
 
     url = appendCursorToUrl(url, perPage, cursor, retriveAllPages);
@@ -385,7 +385,7 @@ export default class OpenAlex {
     const response: AxiosResponse<Authors> = await GET(url);
 
     if (response.status === 200) {
-      response.data.meta.page = page || 1;
+      response.data.meta.page = page ?? 1;
 
       if (startPage && endPage) {
         return handleMultipleAuthorsPages(
@@ -403,7 +403,7 @@ export default class OpenAlex {
       }
 
       if (toJson)
-        await fs.writeFileSync(
+        fs.writeFileSync(
           `${toJson}.json`,
           JSON.stringify(response.data, null, 2),
         );

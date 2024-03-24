@@ -1,4 +1,4 @@
-import { WorkfilterParameters } from './workFilterParameters';
+import { WorkFilterParameters } from './workFilterParameters';
 
 export type WorkResult = Work | { error: number; message: string };
 
@@ -268,7 +268,7 @@ export type SearchParameters = {
   toJson?: string;
   startPage?: number;
   endPage?: number;
-  filter?: WorkfilterParameters;
+  filter?: WorkFilterParameters;
   groupBy?: GroupBy;
   sortBy?: SortByWork;
   AbstractArrayToString?: boolean;
@@ -281,7 +281,6 @@ export type SeachField =
   | 'display_name'
   | 'fulltext';
 
-//TODO : add group by type
 export type GroupBy =
   | 'authors_count'
   | 'authorships.author.id'

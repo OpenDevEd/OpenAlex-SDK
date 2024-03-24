@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios';
 import fs from 'fs';
-import { WorkfilterParameters } from 'src/types/workFilterParameters';
+import { WorkFilterParameters } from 'src/types/workFilterParameters';
 import { GroupBy, SortByWork, Works } from '../types/work';
 import { convertToCSV } from './exportCSV';
 import { GET } from './http';
@@ -18,21 +18,21 @@ export function calculatePages(pageSize: number, total: number): number {
 
 /**
  * The function `validateParameters` validates the search parameters.
- * @param {boolean} retriveAllPages - The `retriveAllPages` parameter is a boolean that represents whether to retrieve all pages.
+ * @param {boolean} retrieveAllPages - The `retrieveAllPages` parameter is a boolean that represents whether to retrieve all pages.
  * @param {number} startPage - The `startPage` parameter is a number that represents the start page number.
  * @param {number} endPage - The `endPage` parameter is a number that represents the end page number.
  * @param {string} searchField - The `searchField` parameter is a string that represents the field to search in.
  * @throws {Error} - Throws an error if the parameters are invalid.
  */
 export function validateParameters(
-  retriveAllPages?: boolean,
+  retrieveAllPages?: boolean,
   startPage?: number,
   endPage?: number,
   searchField?: string,
 ) {
-  if (retriveAllPages && (startPage || endPage))
+  if (retrieveAllPages && (startPage || endPage))
     throw new Error(
-      'startPage and endPage are not allowed with retriveAllPages',
+      'startPage and endPage are not allowed with retrieveAllPages',
     );
   if (
     searchField &&
@@ -52,18 +52,18 @@ export function validateParameters(
  * @param {string} url - The `url` parameter is a string that represents the URL.
  * @param {number} perPage - The `perPage` parameter is a number that represents the number of works per page.
  * @param {string} cursor - The `cursor` parameter is a string that represents the cursor.
- * @param {boolean} retriveAllPages - The `retriveAllPages` parameter is a boolean that represents whether to retrieve all pages.
+ * @param {boolean} retrieveAllPages - The `retrieveAllPages` parameter is a boolean that represents whether to retrieve all pages.
  * @returns {string} a string that represents the URL with the cursor appended.
  */
 export function appendCursorToUrl(
   url: string,
   perPage?: number,
   cursor?: string,
-  retriveAllPages?: boolean,
+  retrieveAllPages?: boolean,
 ): string {
   url = perPage ? `${url}&per_page=${perPage}` : url;
   url =
-    cursor && !retriveAllPages ? `${url}&cursor=${cursor}` : `${url}&cursor=*`;
+    cursor && !retrieveAllPages ? `${url}&cursor=${cursor}` : `${url}&cursor=*`;
   return url;
 }
 
@@ -72,7 +72,7 @@ export function appendCursorToUrl(
  * @param {string} baseUrl - The `baseUrl` parameter is a string that represents the base URL.
  * @param {string} search - The `search` parameter is a string that represents the search query.
  * @param {string} searchField - The `searchField` parameter is a string that represents the field to search in.
- * @param {WorkfilterParameters} filter - The `filter` parameter is an object that represents the filter parameters.
+ * @param {WorkFilterParameters} filter - The `filter` parameter is an object that represents the filter parameters.
  * @param {GroupBy} group_by - The `group_by` parameter is a string that represents the field to group by.
  * @param {SortByWork} sortBy - The `sortBy` parameter is an object that represents the sort parameters.
  * @returns {string} a string that represents the URL.
@@ -81,7 +81,7 @@ export function buildUrl(
   baseUrl: string,
   search?: string,
   searchField?: string,
-  filter?: WorkfilterParameters,
+  filter?: WorkFilterParameters,
   group_by?: GroupBy,
   sortBy?: SortByWork,
 ): string {
@@ -165,14 +165,14 @@ export function getPaths(
  * @returns a string that represents the cursor.
  */
 export async function getCursorByPage(
-  page: number = 1,
   url: string,
+  page: number = 1,
   perPage: number = 25,
 ): Promise<string> {
   if (page === 1) return '*';
 
   let remainingPages = (page - 1) * perPage;
-  let cursorPage = remainingPages;
+  let cursorPage;
 
   if (remainingPages <= 200) {
     cursorPage = remainingPages;
@@ -315,10 +315,10 @@ export async function handleAllPages(
 
 /**
  * The function `filterBuilder` builds the filter string.
- * @param {WorkfilterParameters} filter - The `filter` parameter is an object that represents the filter parameters.
+ * @param {WorkFilterParameters} filter - The `filter` parameter is an object that represents the filter parameters.
  * @returns a string that represents the filter string.
  */
-function filterBuilder(filter: WorkfilterParameters) {
+function filterBuilder(filter: WorkFilterParameters) {
   let filterString = '';
   const filterObject = getPaths(filter);
 

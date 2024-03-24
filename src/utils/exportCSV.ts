@@ -69,12 +69,3 @@ export function convertToCSV(data: any[], filename: string): string {
 
   return csvString;
 }
-
-// // Example usage
-// const data = [
-//   { id: 1, name: 'John Doe', address: { city: 'CityX', street: 'StreetY' } },
-//   { id: 2, name: 'Jane Doe', address: { city: 'CityZ', street: 'StreetA' } },
-// ];
-
-// const csvString = convertToCSV(data);
-// fs.writeFileSync('test.csv', csvString);
