@@ -64,3 +64,23 @@ type Concept = {
   level: number;
   score: number;
 };
+
+export type GroupBySource =
+  | 'apc_prices.currency'
+  | 'apc_usd'
+  | 'cited_by_count'
+  | 'has_issn'
+  | 'continent'
+  | 'country_code'
+  | 'host_organization.id'
+  | 'host_organization_lineage.id'
+  | 'is_global_south'
+  | 'is_in_doaj'
+  | 'is_oa'
+  | 'issn'
+  | 'publisher'
+  | 'summary_stats.2yr_mean_citedness'
+  | 'summary_stats.h_index'
+  | 'summary_stats.i10_index'
+  | 'type'
+  | 'works_count';
