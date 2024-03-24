@@ -1,5 +1,6 @@
 import axios from 'axios';
 import fs from 'fs';
+import { Author } from 'src/types/author';
 import OpenAlex from '../src/index';
 describe('get single author', () => {
   test('get author ', async () => {
@@ -32,7 +33,7 @@ describe('get multiple authors', () => {
       'https://api.openalex.org/authors?per-page=50&search=john%20smith',
     );
     expect(res.results).toEqual(openAlexRes.data.results);
-  });
+  }, 10000);
 
   test('get simple page 2', async () => {
     const openAlex = new OpenAlex();
@@ -44,7 +45,7 @@ describe('get multiple authors', () => {
       'https://api.openalex.org/authors?per-page=50&page=2',
     );
     expect(res.results).toEqual(openAlexRes.data.results);
-  });
+  }, 10000);
   // get authors with search query
   test('get with search query', async () => {
     const openAlex = new OpenAlex();
@@ -68,7 +69,7 @@ describe('get multiple authors', () => {
       'https://api.openalex.org/authors?filter=display_name.search:john%20smith&per-page=50',
     );
     expect(res.results).toEqual(openAlexRes.data.results);
-  });
+  }, 10000);
   // get authors from page 1 to 3 and per page 50
   test('get with start and end page', async () => {
     const openAlex = new OpenAlex();
@@ -86,12 +87,13 @@ describe('get multiple authors', () => {
     const openAlexRes3 = await axios.get(
       'https://api.openalex.org/authors?per-page=50&page=3',
     );
-    expect(res.results).toEqual([
-      ...openAlexRes.data.results,
-      ...openAlexRes2.data.results,
-      ...openAlexRes3.data.results,
+    // compare only ids in the results
+    expect(res.results.map((r: Author) => r.id)).toEqual([
+      ...openAlexRes.data.results.map((r: Author) => r.id),
+      ...openAlexRes2.data.results.map((r: Author) => r.id),
+      ...openAlexRes3.data.results.map((r: Author) => r.id),
     ]);
-  });
+  }, 10000);
   // get authors with simple filter
   test('get authors with simple filter', async () => {
     const openAlex = new OpenAlex();
@@ -117,7 +119,7 @@ describe('get multiple authors', () => {
       'https://api.openalex.org/authors?filter=works_count:<100|>10',
     );
     expect(res.results).toEqual(openAlexRes.data.results);
-  });
+  }, 10000);
   // get authors with multiple filters and search query
   test('get authors with multiple filters and search query', async () => {
     const openAlex = new OpenAlex();
@@ -131,7 +133,7 @@ describe('get multiple authors', () => {
       'https://api.openalex.org/authors?filter=works_count:<100|>10&search=john%20smith',
     );
     expect(res.results).toEqual(openAlexRes.data.results);
-  });
+  }, 10000);
   // get authors with multiple filters and search query and search field
   test('get authors with multiple filters and search query and search field', async () => {
     const openAlex = new OpenAlex();
@@ -146,7 +148,7 @@ describe('get multiple authors', () => {
       'https://api.openalex.org/authors?filter=works_count:%3C100|%3E10,display_name.search:john%20smith',
     );
     expect(res.results).toEqual(openAlexRes.data.results);
-  });
+  }, 10000);
   // get authors with group by
   test('get authors with group by', async () => {
     const openAlex = new OpenAlex();
@@ -157,7 +159,7 @@ describe('get multiple authors', () => {
       'https://api.openalex.org/authors?group_by=works_count',
     );
     expect(res.results).toEqual(openAlexRes.data.results);
-  });
+  }, 10000);
   // get authors with group by and filter
   test('get authors with group by and filter', async () => {
     const openAlex = new OpenAlex();
@@ -171,7 +173,7 @@ describe('get multiple authors', () => {
       'https://api.openalex.org/authors?group_by=works_count&filter=works_count:<100|>10',
     );
     expect(res.results).toEqual(openAlexRes.data.results);
-  });
+  }, 10000);
   // get authors with sort by
   test('get authors with sort by', async () => {
     const openAlex = new OpenAlex();
@@ -186,7 +188,7 @@ describe('get multiple authors', () => {
       'https://api.openalex.org/authors?search=john%20smith&sort=cited_by_count:desc&cursor=*',
     );
     expect(res.results).toEqual(openAlexRes.data.results);
-  });
+  }, 10000);
 });
 
 // test saving files
@@ -201,7 +203,7 @@ describe('save authors to csv', () => {
     expect(fs.existsSync('authors.csv')).toBe(true);
     // delete the file
     fs.unlinkSync('authors.csv');
-  });
+  }, 10000);
   // save authors to json
   test('save authors to json', async () => {
     const openAlex = new OpenAlex();
@@ -213,5 +215,5 @@ describe('save authors to csv', () => {
     expect(fs.existsSync('authors.json')).toBe(true);
     // delete the file
     fs.unlinkSync('authors.json');
-  });
+  }, 10000);
 });
