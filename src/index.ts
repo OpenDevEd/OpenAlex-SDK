@@ -7,6 +7,7 @@ import {
   AuthorsSearchParameters,
   ExternalIdsAuthor,
 } from './types/author';
+import { ExternalIdsSource } from './types/source';
 import { ExternalIdsWork, SearchParameters, Work, Works } from './types/work';
 import {
   buildAuthorsUrl,
@@ -410,6 +411,17 @@ export default class OpenAlex {
       if (toCsv) {
         convertToCSV(response.data.results, toCsv);
       }
+      return response.data;
+    } else {
+      throw new Error(`Error ${response.status}: ${response.statusText}`);
+    }
+  }
+  async source(id: string, externalIds?: ExternalIdsSource) {
+    let url = '';
+    if (externalIds) url = `${this.url}/sources/${externalIds}:${id}`;
+    else url = `${this.url}/sources/${id}`;
+    const response: AxiosResponse<Author> = await GET(url);
+    if (response.status === 200) {
       return response.data;
     } else {
       throw new Error(`Error ${response.status}: ${response.statusText}`);

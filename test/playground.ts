@@ -5,20 +5,22 @@ import OpenAlex from '../src/index';
 (async () => {
   const openAlex = new OpenAlex();
   // const res = await openAlex.work('W2741809807');
-  const res = await openAlex.works({
-    search: 'education',
-    searchField: 'title',
-    perPage: 200,
-    page: 60,
-  });
-  // const res = await openAlex.author('A5023888391');
-  console.log(res.meta);
+  // const res = await openAlex.works({
+  //   search: 'education',
+  //   searchField: 'title',
+  //   perPage: 200,
+  //   page: 60,
+  // });
+  // // const res = await openAlex.author('A5023888391');
+  // console.log(res.meta);
   // const res2 = await openAlex.authors({
   //   search: 'tupolev',
   //   searchField: 'display_name',
   //   perPage: 1,
   // });
   // console.log(res2);
+  const res3 = await openAlex.source('S137773608');
+  console.log(res3);
 
   // remove abstract and fulltext from the csv
 })();

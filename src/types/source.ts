@@ -88,7 +88,6 @@ export type GroupBySource =
   | 'works_count';
 
 export type SeachFieldSource = 'display_name';
-
 export type SearchParametersSource = {
   search?: string;
   searchField?: SeachFieldSource;
@@ -115,3 +114,5 @@ export type SortBySource = {
     | 'relevance_score';
   order: 'asc' | 'desc';
 };
+
+export type ExternalIdsSource = 'issn' | 'fatcat' | 'mag' | 'wikidata';
