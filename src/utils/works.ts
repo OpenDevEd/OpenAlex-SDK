@@ -29,11 +29,18 @@ export function validateParameters(
   startPage?: number,
   endPage?: number,
   searchField?: string,
+  chunkSize?: number,
+  toJson?: string,
+  toCsv?: string,
 ) {
   if (retrieveAllPages && (startPage || endPage))
     throw new Error(
       'startPage and endPage are not allowed with retrieveAllPages',
     );
+  if (chunkSize && (startPage || endPage))
+    throw new Error('startPage and endPage are not allowed with chunkSize');
+  if (chunkSize && !toJson && !toCsv)
+    throw new Error('toJson or toCsv is required with chunkSize');
   if (
     searchField &&
     ![

@@ -145,7 +145,15 @@ export default class OpenAlex {
     } = searchParameters;
     let { perPage } = searchParameters;
     let { page } = searchParameters;
-    validateParameters(retriveAllPages, startPage, endPage, searchField);
+    validateParameters(
+      retriveAllPages,
+      startPage,
+      endPage,
+      searchField,
+      chunkSize,
+      toCsv,
+      toJson,
+    );
 
     let url = buildUrl(this.url, search, searchField, filter, group_by, sortBy);
     let cursor = await getCursorByPage(url, page, perPage);
