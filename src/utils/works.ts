@@ -369,7 +369,18 @@ export async function handleAllPagesInChunks(
           if (!fs.existsSync(toCsv)) {
             fs.mkdirSync(toCsv);
           }
-          convertToCSV(chunk, `${toCsv}/${toCsv}_${i}`);
+          end = start + chunk.length;
+          const startFormatted = formatNumber(
+            Number((start + 1).toString().padStart(7, '0')),
+          );
+          const endFormatted = formatNumber(
+            Number(end.toString().padStart(7, '0')),
+          );
+          convertToCSV(
+            chunk,
+            `${toCsv}/${toCsv}_${startFormatted}-${endFormatted}.csv`,
+          );
+          start = end;
         }
         chunk = [];
       }
