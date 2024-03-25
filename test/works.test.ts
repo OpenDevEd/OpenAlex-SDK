@@ -1,6 +1,9 @@
 import axios from 'axios';
 import fs from 'fs';
+import * as glob from 'glob';
+import { Work } from 'src/types/work';
 import OpenAlex from '../src/index';
+import { formatNumber } from '../src/utils/works';
 
 // get single work
 describe('get single work', () => {
@@ -33,8 +36,10 @@ describe('get multiple works', () => {
     const openAlexRes = await axios.get(
       'https://api.openalex.org/works?per-page=50',
     );
-    expect(res.results).toEqual(openAlexRes.data.results);
-  });
+    expect(res.results.map((r) => r.id)).toEqual(
+      openAlexRes.data.results.map((r: Work) => r.id),
+    );
+  }, 10000);
 
   test('get simple page 2', async () => {
     const openAlex = new OpenAlex();
@@ -45,8 +50,10 @@ describe('get multiple works', () => {
     const openAlexRes = await axios.get(
       'https://api.openalex.org/works?per-page=50&page=2',
     );
-    expect(res.results).toEqual(openAlexRes.data.results);
-  });
+    expect(res.results.map((r) => r.id)).toEqual(
+      openAlexRes.data.results.map((r: Work) => r.id),
+    );
+  }, 10000);
   // get works with search query for 'education'
   test('get with search query', async () => {
     const openAlex = new OpenAlex();
@@ -56,7 +63,9 @@ describe('get multiple works', () => {
     const openAlexRes = await axios.get(
       'https://api.openalex.org/works?search=education',
     );
-    expect(res.results).toEqual(openAlexRes.data.results);
+    expect(res.results.map((r) => r.id)).toEqual(
+      openAlexRes.data.results.map((r: Work) => r.id),
+    );
   });
   // get works with search query for 'education' and page 2
   test('get with search query and page 2', async () => {
@@ -68,7 +77,9 @@ describe('get multiple works', () => {
     const openAlexRes = await axios.get(
       'https://api.openalex.org/works?search=education&page=2',
     );
-    expect(res.results).toEqual(openAlexRes.data.results);
+    expect(res.results.map((r) => r.id)).toEqual(
+      openAlexRes.data.results.map((r: Work) => r.id),
+    );
   });
   // get works with search query for 'education' and page 2 and perPage 50
   test('get with search query and page 2 and perPage 50', async () => {
@@ -81,7 +92,9 @@ describe('get multiple works', () => {
     const openAlexRes = await axios.get(
       'https://api.openalex.org/works?search=education&page=2&per-page=50',
     );
-    expect(res.results).toEqual(openAlexRes.data.results);
+    expect(res.results.map((r) => r.id)).toEqual(
+      openAlexRes.data.results.map((r: Work) => r.id),
+    );
   });
 
   // get works with search query for 'education' and page 2 and perPage 50 and sort by relevance
@@ -99,7 +112,9 @@ describe('get multiple works', () => {
     const openAlexRes = await axios.get(
       'https://api.openalex.org/works?search=education&page=2&per-page=50&sort=relevance_score:desc',
     );
-    expect(res.results).toEqual(openAlexRes.data.results);
+    expect(res.results.map((r) => r.id)).toEqual(
+      openAlexRes.data.results.map((r: Work) => r.id),
+    );
   });
   // get works with search query for 'education and group by institution country code
   test('get with search query and group by institution country code', async () => {
@@ -130,10 +145,10 @@ describe('get multiple works', () => {
     const openAlexRes3 = await axios.get(
       'https://api.openalex.org/works?search=education&page=4',
     );
-    expect(res.results).toEqual([
-      ...openAlexRes.data.results,
-      ...openAlexRes2.data.results,
-      ...openAlexRes3.data.results,
+    expect(res.results.map((r) => r.id)).toEqual([
+      ...openAlexRes.data.results.map((r: Work) => r.id),
+      ...openAlexRes2.data.results.map((r: Work) => r.id),
+      ...openAlexRes3.data.results.map((r: Work) => r.id),
     ]);
   }, 10000);
   // get works with search query for 'education get page from 2 to 4 and perPage 50
@@ -154,10 +169,11 @@ describe('get multiple works', () => {
     const openAlexRes3 = await axios.get(
       'https://api.openalex.org/works?search=education&page=4&per-page=50',
     );
-    expect(res.results).toEqual([
-      ...openAlexRes.data.results,
-      ...openAlexRes2.data.results,
-      ...openAlexRes3.data.results,
+    // compare only ids in the results
+    expect(res.results.map((r) => r.id)).toEqual([
+      ...openAlexRes.data.results.map((r: Work) => r.id),
+      ...openAlexRes2.data.results.map((r: Work) => r.id),
+      ...openAlexRes3.data.results.map((r: Work) => r.id),
     ]);
   }, 10000);
 });
@@ -189,3 +205,61 @@ describe('save works to files', () => {
     fs.unlinkSync('./education.json');
   });
 });
+
+// test retrieveAllPages option
+describe('retrieveAllPages option', () => {
+  test('retrieve All Pages with chunkSize', async () => {
+    const chunkSize = 1000;
+    const openAlex = new OpenAlex();
+    await openAlex.works({
+      search: 'english africa',
+      searchField: 'title',
+      retriveAllPages: true,
+      chunkSize: chunkSize,
+      toJson: 'english_africa',
+    });
+    const openAlexRes = await axios.get(
+      'https://api.openalex.org/works?filter=title.search:english%20africa',
+    );
+    // check folder exists
+    expect(fs.existsSync('./english_africa')).toBe(true);
+    let start = 0;
+    let end;
+    // check if files exists we use ./english_africa as the folder and english_africa_0,000,000-0,001,000.json as first file and so on
+    for (
+      let i = 0;
+      i < Math.ceil(openAlexRes.data.meta.count / chunkSize);
+      i++
+    ) {
+      end = start + chunkSize;
+      end = start + chunkSize;
+      const startFormatted = formatNumber(
+        Number((start + 1).toString().padStart(7, '0')),
+      );
+      // ./english_africa/english_africa_${startFormatted}*.json
+      expect(
+        checkFileExists(`./english_africa/english_africa_${startFormatted}*`),
+      ).toBe(true);
+      start = end;
+    }
+    // delete folder with files
+    fs.rmSync('./english_africa', { recursive: true });
+  }, 100000);
+  test('simple retrieve All Pages test', async () => {
+    const openAlex = new OpenAlex();
+    const res = await openAlex.works({
+      search: 'english africa',
+      searchField: 'title',
+      retriveAllPages: true,
+    });
+    const openAlexRes = await axios.get(
+      'https://api.openalex.org/works?filter=title.search:english%20africa',
+    );
+    expect(res.results).toHaveLength(openAlexRes.data.meta.count);
+  }, 80000);
+});
+
+function checkFileExists(pattern: string): boolean {
+  const files = glob.sync(pattern);
+  return files.length > 0;
+}

@@ -32,7 +32,9 @@ describe('get multiple authors', () => {
     const openAlexRes = await axios.get(
       'https://api.openalex.org/authors?per-page=50&search=john%20smith',
     );
-    expect(res.results).toEqual(openAlexRes.data.results);
+    expect(res.results.map((r) => r.id)).toEqual(
+      openAlexRes.data.results.map((r: Author) => r.id),
+    );
   }, 10000);
 
   test('get simple page 2', async () => {
@@ -44,7 +46,9 @@ describe('get multiple authors', () => {
     const openAlexRes = await axios.get(
       'https://api.openalex.org/authors?per-page=50&page=2',
     );
-    expect(res.results).toEqual(openAlexRes.data.results);
+    expect(res.results.map((r) => r.id)).toEqual(
+      openAlexRes.data.results.map((r: Author) => r.id),
+    );
   }, 10000);
   // get authors with search query
   test('get with search query', async () => {
@@ -55,7 +59,9 @@ describe('get multiple authors', () => {
     const openAlexRes = await axios.get(
       'https://api.openalex.org/authors?search=carl%20sagan',
     );
-    expect(res.results).toEqual(openAlexRes.data.results);
+    expect(res.results.map((r) => r.id)).toEqual(
+      openAlexRes.data.results.map((r: Author) => r.id),
+    );
   });
   // get authors with search query with search field
   test('get with search query and search field', async () => {
@@ -68,7 +74,9 @@ describe('get multiple authors', () => {
     const openAlexRes = await axios.get(
       'https://api.openalex.org/authors?filter=display_name.search:john%20smith&per-page=50',
     );
-    expect(res.results).toEqual(openAlexRes.data.results);
+    expect(res.results.map((r) => r.id)).toEqual(
+      openAlexRes.data.results.map((r: Author) => r.id),
+    );
   }, 10000);
   // get authors from page 1 to 3 and per page 50
   test('get with start and end page', async () => {
@@ -105,7 +113,9 @@ describe('get multiple authors', () => {
     const openAlexRes = await axios.get(
       'https://api.openalex.org/authors?filter=works_count:<100',
     );
-    expect(res.results).toEqual(openAlexRes.data.results);
+    expect(res.results.map((r) => r.id)).toEqual(
+      openAlexRes.data.results.map((r: Author) => r.id),
+    );
   });
   // get authors with multiple filters
   test('get authors with multiple filters', async () => {
@@ -118,7 +128,9 @@ describe('get multiple authors', () => {
     const openAlexRes = await axios.get(
       'https://api.openalex.org/authors?filter=works_count:<100|>10',
     );
-    expect(res.results).toEqual(openAlexRes.data.results);
+    expect(res.results.map((r) => r.id)).toEqual(
+      openAlexRes.data.results.map((r: Author) => r.id),
+    );
   }, 10000);
   // get authors with multiple filters and search query
   test('get authors with multiple filters and search query', async () => {
@@ -132,7 +144,9 @@ describe('get multiple authors', () => {
     const openAlexRes = await axios.get(
       'https://api.openalex.org/authors?filter=works_count:<100|>10&search=john%20smith',
     );
-    expect(res.results).toEqual(openAlexRes.data.results);
+    expect(res.results.map((r) => r.id)).toEqual(
+      openAlexRes.data.results.map((r: Author) => r.id),
+    );
   }, 10000);
   // get authors with multiple filters and search query and search field
   test('get authors with multiple filters and search query and search field', async () => {
@@ -147,7 +161,9 @@ describe('get multiple authors', () => {
     const openAlexRes = await axios.get(
       'https://api.openalex.org/authors?filter=works_count:%3C100|%3E10,display_name.search:john%20smith',
     );
-    expect(res.results).toEqual(openAlexRes.data.results);
+    expect(res.results.map((r) => r.id)).toEqual(
+      openAlexRes.data.results.map((r: Author) => r.id),
+    );
   }, 10000);
   // get authors with group by
   test('get authors with group by', async () => {

@@ -395,7 +395,7 @@ export async function handleAllPagesInChunks(
   }
   return works;
 }
-function formatNumber(num: number): string {
+export function formatNumber(num: number): string {
   // Pad the number to 7 digits
   const paddedNum = num.toString().padStart(7, '0');
 
