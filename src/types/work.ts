@@ -272,6 +272,7 @@ export type SearchParameters = {
   groupBy?: GroupBy;
   sortBy?: SortByWork;
   AbstractArrayToString?: boolean;
+  chunkSize?: number;
 };
 
 export type SeachField =

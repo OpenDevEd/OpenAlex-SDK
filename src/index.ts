@@ -23,6 +23,7 @@ import {
   convertAbstractArrayToString,
   getCursorByPage,
   handleAllPages,
+  handleAllPagesInChunks,
   handleMultiplePages,
   validateParameters,
 } from './utils/works';
@@ -140,6 +141,7 @@ export default class OpenAlex {
       groupBy: group_by,
       sortBy,
       AbstractArrayToString,
+      chunkSize,
     } = searchParameters;
     let { perPage } = searchParameters;
     let { page } = searchParameters;
@@ -187,13 +189,23 @@ export default class OpenAlex {
       }
 
       if (retriveAllPages) {
-        return handleAllPages(
-          url,
-          response,
-          toJson,
-          toCsv,
-          AbstractArrayToString,
-        );
+        if (chunkSize)
+          return handleAllPagesInChunks(
+            url,
+            response,
+            toJson,
+            toCsv,
+            AbstractArrayToString,
+            chunkSize,
+          );
+        else
+          return handleAllPages(
+            url,
+            response,
+            toJson,
+            toCsv,
+            AbstractArrayToString,
+          );
       }
 
       if (toJson)

@@ -19,8 +19,14 @@ import OpenAlex from '../src/index';
   //   perPage: 1,
   // });
   // console.log(res2);
-  const res3 = await openAlex.source('S137773608');
-  console.log(res3);
+  const res4 = await openAlex.works({
+    search: 'english class',
+    retriveAllPages: true,
+    searchField: 'title',
+    toJson: 'english_class',
+    chunkSize: 1000,
+  });
+  console.log(res4.meta);
 
   // remove abstract and fulltext from the csv
 })();

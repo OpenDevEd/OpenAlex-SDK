@@ -1,7 +1,7 @@
 import { AxiosResponse } from 'axios';
 import fs from 'fs';
 import { WorkFilterParameters } from 'src/types/workFilterParameters';
-import { GroupBy, SortByWork, Works } from '../types/work';
+import { GroupBy, SortByWork, Work, Works } from '../types/work';
 import { convertToCSV } from './exportCSV';
 import { GET } from './http';
 
@@ -284,7 +284,7 @@ export async function handleAllPages(
   console.log('total number of pages ', totalPages);
   console.log('page', 1, 'response', initialResponse.status);
   for (let i = 2; i <= totalPages; i++) {
-    const response: AxiosResponse<Works> = await GET(`${url}&cursor=${cursor}`);
+    const response: AxiosResponse<Works> = await GET(`${url}${cursor}`);
     console.log('page', i, 'response', response.status);
     if (response.status === 200) {
       works.results = works.results.concat(response.data.results);
@@ -312,7 +312,81 @@ export async function handleAllPages(
   }
   return works;
 }
+export async function handleAllPagesInChunks(
+  url: string,
+  initialResponse: AxiosResponse<Works>,
+  toJson?: string,
+  toCsv?: string,
+  AbstractArrayToString?: boolean,
+  chunkSize: number = 1000,
+) {
+  const totalPages = calculatePages(200, initialResponse.data.meta.count);
+  const works = initialResponse.data;
+  let cursor = works.meta.next_cursor;
+  console.log('total number of pages ', totalPages);
+  console.log('page', 1, 'response', initialResponse.status);
+  let chunk: Work[] = [];
+  chunk.push(...works.results);
+  let start = 0;
+  let end;
+  for (let i = 1; i <= totalPages - 1; i++) {
+    const response: AxiosResponse<Works> = await GET(`${url}${cursor}`);
+    console.log('page', i, 'response', response.status);
+    if (response.status === 200) {
+      chunk.push(...response.data.results);
+      cursor = response.data.meta.next_cursor; // Update the cursor here
+      if (chunk.length >= chunkSize || i === totalPages - 1) {
+        if (AbstractArrayToString) {
+          chunk = chunk.map((work) => {
+            if (work.abstract_inverted_index)
+              work.abstract = convertAbstractArrayToString(
+                work.abstract_inverted_index,
+              );
+            delete work.abstract_inverted_index;
+            return work;
+          });
+        }
+        if (toJson) {
+          if (!fs.existsSync(toJson)) {
+            fs.mkdirSync(toJson);
+          }
 
+          end = start + chunk.length;
+          const startFormatted = formatNumber(
+            Number((start + 1).toString().padStart(7, '0')),
+          );
+          const endFormatted = formatNumber(
+            Number(end.toString().padStart(7, '0')),
+          );
+
+          fs.writeFileSync(
+            `${toJson}/${toJson}_${startFormatted}-${endFormatted}.json`,
+            JSON.stringify(chunk, null, 2),
+          );
+          start = end;
+        }
+        if (toCsv) {
+          if (!fs.existsSync(toCsv)) {
+            fs.mkdirSync(toCsv);
+          }
+          convertToCSV(chunk, `${toCsv}/${toCsv}_${i}`);
+        }
+        chunk = [];
+      }
+    } else throw new Error(`Error ${response.status}: ${response.statusText}`);
+  }
+  return works;
+}
+function formatNumber(num: number): string {
+  // Pad the number to 7 digits
+  const paddedNum = num.toString().padStart(7, '0');
+
+  // Format the padded number with commas as thousands separators
+  const parts = paddedNum.split('.');
+  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+  return parts.join('.');
+}
 /**
  * The function `filterBuilder` builds the filter string.
  * @param {WorkFilterParameters} filter - The `filter` parameter is an object that represents the filter parameters.
