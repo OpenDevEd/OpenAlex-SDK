@@ -54,9 +54,18 @@ export default class OpenAlex {
     const response: AxiosResponse<Work> = await GET(url);
     if (response.status === 200) {
       return response.data;
-    } else {
-      throw new Error(`Error ${response.status}: ${response.statusText}`);
     }
+    if (response.status === 404) {
+      console.log(`Work with id ${id} not found`);
+    } else {
+      console.log(`Error ${response.status}: ${response.statusText}`);
+    }
+    // return empty work
+    return {
+      id: id,
+      biblio: {},
+      counts_by_year: [],
+    };
   }
 
   /**
