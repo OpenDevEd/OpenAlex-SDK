@@ -447,4 +447,6 @@ export default class OpenAlex {
       throw new Error(`Error ${response.status}: ${response.statusText}`);
     }
   }
+
+  // async snowBalling(id: string, externalIds?: ExternalIdsWork) {}
 }

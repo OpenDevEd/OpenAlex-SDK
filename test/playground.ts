@@ -20,11 +20,19 @@ import OpenAlex from '../src/index';
   // });
   // console.log(res2);
   const res4 = await openAlex.works({
-    search: 'english class',
+    search: 'africa',
     retriveAllPages: true,
     searchField: 'title',
-    toJson: 'english_class',
+    toCsv: 'africa',
+    AbstractArrayToString: true,
+    chunkSize: 25000,
+  });
+  const res5 = await openAlex.works({
+    searchField: 'title',
+    search: ' aftica ',
+    retriveAllPages: true,
     chunkSize: 1000,
+    toJson: 'aecs_all',
   });
   console.log(res4.meta);
 
