@@ -116,3 +116,15 @@ export type SortBySource = {
 };
 
 export type ExternalIdsSource = 'issn' | 'fatcat' | 'mag' | 'wikidata';
+type Meta = {
+  count: number;
+  db_response_time_ms: number;
+  page?: number;
+  per_page: number;
+  next_cursor: string;
+  groups_count?: number;
+};
+export type Sources = {
+  results: Source[];
+  meta: Meta;
+};

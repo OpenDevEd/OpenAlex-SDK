@@ -10,7 +10,6 @@ import {
 import { ExternalIdsSource } from './types/source';
 import { ExternalIdsWork, SearchParameters, Work, Works } from './types/work';
 import {
-  // buildAuthorsUrl,
   handleAllAuthorsPages,
   handleMultipleAuthorsPages,
   validateAuthorParameters,

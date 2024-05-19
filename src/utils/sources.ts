@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios';
 import fs from 'fs';
-import { Authors } from 'src/types/author';
+import { Sources } from 'src/types/source';
 import { convertToCSV } from './exportCSV';
 import { calculatePages } from './helpers';
 import { GET } from './http';
@@ -32,80 +32,76 @@ export function validateAuthorParameters(
  * @param {number} startPage - The `startPage` parameter is a number that represents the start page number.
  * @param {number} endPage - The `endPage` parameter is a number that represents the end page number.
  * @param {string} url - The `url` parameter is a string that represents the URL.
- * @param {AxiosResponse<Authors>} initialResponse - The `initialResponse` parameter is an object that represents the initial response.
+ * @param {AxiosResponse<Sources>} initialResponse - The `initialResponse` parameter is an object that represents the initial response.
  * @param {string} toJson - The `toJson` parameter is a string that represents the JSON file name.
  * @param {string} toCsv - The `toCsv` parameter is a string that represents the CSV file name.
  * @returns an object that represents the authors.
  */
-export async function handleMultipleAuthorsPages(
+export async function handleMultipleSourcesPages(
   startPage: number,
   endPage: number,
   url: string,
-  initialResponse: AxiosResponse<Authors>,
+  initialResponse: AxiosResponse<Sources>,
   toJson?: string,
   toCsv?: string,
 ) {
-  const authors = initialResponse.data;
-  let cursor = authors.meta.next_cursor;
+  const sources = initialResponse.data;
+  let cursor = sources.meta.next_cursor;
   url = url.split('&cursor')[0];
   for (let i = startPage + 1; i <= endPage; i++) {
-    const response: AxiosResponse<Authors> = await GET(
+    const response: AxiosResponse<Sources> = await GET(
       `${url}&cursor=${cursor}`,
     );
     if (response.status === 200) {
-      authors.results = authors.results.concat(response.data.results);
+      sources.results = sources.results.concat(response.data.results);
       cursor = response.data.meta.next_cursor;
     } else throw new Error(`Error ${response.status}: ${response.statusText}`);
     if (i === endPage) {
-      authors.meta.next_cursor = cursor;
-      authors.meta.page = endPage;
+      sources.meta.next_cursor = cursor;
+      sources.meta.page = endPage;
     }
   }
   if (toJson)
-    fs.writeFileSync(`${toJson}.json`, JSON.stringify(authors, null, 2));
-  if (toCsv) convertToCSV(authors.results, toCsv);
+    fs.writeFileSync(`${toJson}.json`, JSON.stringify(sources, null, 2));
+  if (toCsv) convertToCSV(sources.results, toCsv);
 
-  return authors;
+  return sources;
 }
-
 /**
  * The function `handleAllPages` handles all pages.
  * @param {string} url - The `url` parameter is a string that represents the URL.
- * @param {AxiosResponse<Authors>} initialResponse - The `initialResponse` parameter is an object that represents the initial response.
+ * @param {AxiosResponse<Sources>} initialResponse - The `initialResponse` parameter is an object that represents the initial response.
  * @param {string} toJson - The `toJson` parameter is a string that represents the JSON file name.
  * @param {string} toCsv - The `toCsv` parameter is a string that represents the CSV file name.
- * @returns an object that represents the authors.
+ * @returns an object that represents the works.
  */
-export async function handleAllAuthorsPages(
+export async function handleAllSourcesPages(
   url: string,
-  initialResponse: AxiosResponse<Authors>,
+  initialResponse: AxiosResponse<Sources>,
   toJson?: string,
   toCsv?: string,
 ) {
   const totalPages = calculatePages(200, initialResponse.data.meta.count);
-  const authors = initialResponse.data;
-  let cursor = authors.meta.next_cursor;
+  const sources = initialResponse.data;
+  let cursor = sources.meta.next_cursor;
   console.log('total number of pages ', totalPages);
   console.log('page', 1, 'response', initialResponse.status);
   for (let i = 2; i <= totalPages; i++) {
-    const response: AxiosResponse<Authors> = await GET(
-      `${url}&cursor=${cursor}`,
-    );
+    const response: AxiosResponse<Sources> = await GET(`${url}${cursor}`);
     console.log('page', i, 'response', response.status);
     if (response.status === 200) {
-      authors.results = authors.results.concat(response.data.results);
+      sources.results = sources.results.concat(response.data.results);
       cursor = response.data.meta.next_cursor;
     } else throw new Error(`Error ${response.status}: ${response.statusText}`);
     if (i === totalPages) {
-      authors.meta.next_cursor = cursor;
-      authors.meta.page = totalPages;
+      sources.meta.next_cursor = cursor;
+      sources.meta.page = totalPages;
     }
   }
-
   if (toJson)
-    fs.writeFileSync(`${toJson}.json`, JSON.stringify(authors, null, 2));
+    fs.writeFileSync(`${toJson}.json`, JSON.stringify(sources, null, 2));
   if (toCsv) {
-    convertToCSV(authors.results, toCsv);
+    convertToCSV(sources.results, toCsv);
   }
-  return authors;
+  return sources;
 }
