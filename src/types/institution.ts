@@ -134,3 +134,44 @@ type Ids = {
 };
 
 export type ExternalIdsInstitution = 'ror' | 'mag' | 'wikidata';
+
+export type SearchFieldInstitution = 'display_name';
+
+export type SearchParametersInstitution = {
+  search?: string;
+  searchField?: SearchFieldInstitution;
+  perPage?: number;
+  page?: number;
+  retriveAllPages?: boolean;
+  toCsv?: string;
+  toJson?: string;
+  startPage?: number;
+  // filter?: SourceFilterParameters;
+  endPage?: number;
+  groupBy?: GroupByInstitution;
+  sortBy?: SortByInstitution;
+  AbstractArrayToString?: boolean;
+};
+export type GroupByInstitution =
+  | 'cited_by_count'
+  | 'continent'
+  | 'country_code'
+  | 'has_ror'
+  | 'is_global_south'
+  | 'lineage'
+  | 'repositories.host_organization'
+  | 'summary_stats.2yr_mean_citedness'
+  | 'summary_stats.h_index'
+  | 'summary_stats.i10_index'
+  | 'type'
+  | 'works_count';
+export type SortByInstitution = {
+  field:
+    | 'display_name'
+    | 'cited_by_count'
+    | 'works_count'
+    | 'publication_date'
+    /**  relevance_score (only exists if there's a search filter active) */
+    | 'relevance_score';
+  order: 'asc' | 'desc';
+};
