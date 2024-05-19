@@ -1,3 +1,5 @@
+import { InstitutionFilterParameters } from './institutionFilterParameters';
+
 type Institution = {
   id?: string;
   ror?: string;
@@ -146,7 +148,7 @@ export type SearchParametersInstitution = {
   toCsv?: string;
   toJson?: string;
   startPage?: number;
-  // filter?: SourceFilterParameters;
+  filter?: InstitutionFilterParameters;
   endPage?: number;
   groupBy?: GroupByInstitution;
   sortBy?: SortByInstitution;
