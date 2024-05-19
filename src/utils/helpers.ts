@@ -1,9 +1,11 @@
+import { AxiosResponse } from 'axios';
 import { GroupByAuthor } from 'src/types/author';
 import { AuthorFilterParameters } from 'src/types/authorFilterParameters';
 import { GroupBySource } from 'src/types/source';
 import { SourceFilterParameters } from 'src/types/sourceFilterParameters';
-import { GroupByWorks, SortByWork } from 'src/types/work';
+import { GroupByWorks, SortByWork, Works } from 'src/types/work';
 import { WorkFilterParameters } from 'src/types/workFilterParameters';
+import { GET } from './http';
 
 /**
  * The function `buildUrl` builds the URL based on the search parameters.
@@ -117,4 +119,80 @@ export function getPaths(
     }
   }
   return result;
+}
+
+/**
+ * The function `appendCursorToUrl` appends the cursor to the URL.
+ * @param {string} url - The `url` parameter is a string that represents the URL.
+ * @param {number} perPage - The `perPage` parameter is a number that represents the number of works per page.
+ * @param {string} cursor - The `cursor` parameter is a string that represents the cursor.
+ * @param {boolean} retrieveAllPages - The `retrieveAllPages` parameter is a boolean that represents whether to retrieve all pages.
+ * @returns {string} a string that represents the URL with the cursor appended.
+ */
+export function appendCursorToUrl(
+  url: string,
+  perPage?: number,
+  cursor?: string,
+  retrieveAllPages?: boolean,
+): string {
+  url = perPage ? `${url}&per_page=${perPage}` : url;
+  url =
+    cursor && !retrieveAllPages ? `${url}&cursor=${cursor}` : `${url}&cursor=*`;
+  return url;
+}
+
+/**
+ * The function `getCursorByPage` take a page number and a URL and returns the cursor.
+ * @param {number} page - The `page` parameter is a number that represents the page number.
+ * @param {string} url - The `url` parameter is a string that represents the URL.
+ * @param {number} perPage - The `perPage` parameter is a number that represents the number of works per page.
+ * @returns a string that represents the cursor.
+ */
+export async function getCursorByPage(
+  url: string,
+  page: number = 1,
+  perPage: number = 25,
+): Promise<string> {
+  if (page === 1) return '*';
+
+  let remainingPages = (page - 1) * perPage;
+  let cursorPage;
+
+  if (remainingPages <= 200) {
+    cursorPage = remainingPages;
+    remainingPages = 0;
+  } else {
+    cursorPage = 200;
+    remainingPages = remainingPages - 200;
+  }
+
+  let new_url = appendCursorToUrl(url, cursorPage, '*', false);
+
+  let response: AxiosResponse<Works> = await GET(new_url);
+
+  if (response.status !== 200) {
+    throw new Error(`Error ${response.status}: ${response.statusText}`);
+  }
+
+  let cursor = response.data.meta.next_cursor;
+
+  while (remainingPages > 0) {
+    if (remainingPages <= 200) {
+      cursorPage = remainingPages;
+      remainingPages = 0;
+    } else {
+      cursorPage = 200;
+      remainingPages = remainingPages - 200;
+    }
+
+    new_url = appendCursorToUrl(url, cursorPage, cursor, false);
+
+    response = await GET(new_url);
+    if (response.status === 200) {
+      cursor = response.data.meta.next_cursor;
+    } else {
+      throw new Error(`Error ${response.status}: ${response.statusText}`);
+    }
+  }
+  return cursor;
 }
