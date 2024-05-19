@@ -13,28 +13,27 @@ import OpenAlex from '../src/index';
   // });
   // // const res = await openAlex.author('A5023888391');
   // console.log(res.meta);
-  // const res2 = await openAlex.authors({
-  //   search: 'tupolev',
-  //   searchField: 'display_name',
-  //   perPage: 1,
+  const res2 = await openAlex.authors({
+    filter: {
+      works_count: ['<100', '>10'],
+    },
+  });
+  console.log(res2);
+  // const res4 = await openAlex.works({
+  //   search: 'africa',
+  //   // retriveAllPages: true,
+  //   searchField: 'title',
+  //   toCsv: 'africa',
+  //   AbstractArrayToString: true,
+  //   // chunkSize: 25000,
+  //   filter: {
+  //     publication_year: [
+  //       2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024,
+  //     ],
+  //   },
   // });
-  // console.log(res2);
-  const res4 = await openAlex.works({
-    search: 'africa',
-    retriveAllPages: true,
-    searchField: 'title',
-    toCsv: 'africa',
-    AbstractArrayToString: true,
-    chunkSize: 25000,
-  });
-  const res5 = await openAlex.works({
-    searchField: 'title',
-    search: ' aftica ',
-    retriveAllPages: true,
-    chunkSize: 1000,
-    toJson: 'aecs_all',
-  });
-  console.log(res4.meta);
+
+  // console.log(res4.meta);
 
   // remove abstract and fulltext from the csv
 })();

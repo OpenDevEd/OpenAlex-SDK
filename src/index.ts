@@ -10,16 +10,17 @@ import {
 import { ExternalIdsSource } from './types/source';
 import { ExternalIdsWork, SearchParameters, Work, Works } from './types/work';
 import {
-  buildAuthorsUrl,
+  // buildAuthorsUrl,
   handleAllAuthorsPages,
   handleMultipleAuthorsPages,
   validateAuthorParameters,
 } from './utils/authors';
 import { convertToCSV } from './utils/exportCSV';
+import { buildUrl } from './utils/helpers';
 import { GET } from './utils/http';
 import {
   appendCursorToUrl,
-  buildUrl,
+  // buildUrl,
   convertAbstractArrayToString,
   getCursorByPage,
   handleAllPages,
@@ -164,7 +165,15 @@ export default class OpenAlex {
       toJson,
     );
 
-    let url = buildUrl(this.url, search, searchField, filter, group_by, sortBy);
+    let url = buildUrl(
+      this.url,
+      'works',
+      search,
+      searchField,
+      filter,
+      group_by,
+      sortBy,
+    );
     let cursor = await getCursorByPage(url, page, perPage);
     if (retriveAllPages) {
       perPage = 200;
@@ -391,8 +400,9 @@ export default class OpenAlex {
     let { page } = searchParameters;
     validateAuthorParameters(retriveAllPages, startPage, endPage, searchField);
 
-    let url = buildAuthorsUrl(
+    let url = buildUrl(
       this.url,
+      'authors',
       search,
       searchField,
       filter,

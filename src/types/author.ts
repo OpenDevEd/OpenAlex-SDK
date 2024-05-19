@@ -95,13 +95,13 @@ export type AuthorsSearchParameters = {
   startPage?: number;
   endPage?: number;
   filter?: AuthorFilterParameters;
-  groupBy?: GroupBy;
+  groupBy?: GroupByAuthor;
   sortBy?: SortByAuthor;
   AbstractArrayToString?: boolean;
 };
 export type SeachField = 'display_name';
 
-export type GroupBy =
+export type GroupByAuthor =
   | 'affiliations.institution.country_code'
   | 'affiliations.institution.id'
   | 'affiliations.institution.lineage'

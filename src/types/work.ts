@@ -269,7 +269,7 @@ export type SearchParameters = {
   startPage?: number;
   endPage?: number;
   filter?: WorkFilterParameters;
-  groupBy?: GroupBy;
+  groupBy?: GroupByWorks;
   sortBy?: SortByWork;
   AbstractArrayToString?: boolean;
   chunkSize?: number;
@@ -282,7 +282,7 @@ export type SeachField =
   | 'display_name'
   | 'fulltext';
 
-export type GroupBy =
+export type GroupByWorks =
   | 'authors_count'
   | 'authorships.author.id'
   | 'authorships.author.orcid'
