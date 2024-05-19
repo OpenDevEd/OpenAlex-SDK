@@ -16,10 +16,14 @@ import {
   validateAuthorParameters,
 } from './utils/authors';
 import { convertToCSV } from './utils/exportCSV';
-import { appendCursorToUrl, buildUrl, getCursorByPage } from './utils/helpers';
+import {
+  appendCursorToUrl,
+  buildUrl,
+  convertAbstractArrayToString,
+  getCursorByPage,
+} from './utils/helpers';
 import { GET } from './utils/http';
 import {
-  convertAbstractArrayToString,
   handleAllPages,
   handleAllPagesInChunks,
   handleMultiplePages,

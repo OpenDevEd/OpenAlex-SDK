@@ -4,18 +4,18 @@ export type Author = {
   orcid?: string;
   display_name?: string;
   display_name_alternatives?: string[];
-  works_count: number;
-  cited_by_count: number;
-  summary_stats: SummaryStats;
-  ids: Ids;
-  affiliations: Affiliation[];
-  last_known_institution: Institution;
-  last_known_institutions: Institution[];
-  x_concepts: Concept[];
-  counts_by_year: PublicationYear[];
-  works_api_url: string;
-  updated_date: string;
-  created_date: string;
+  works_count?: number;
+  cited_by_count?: number;
+  summary_stats?: SummaryStats;
+  ids?: Ids;
+  affiliations?: Affiliation[];
+  last_known_institution?: Institution;
+  last_known_institutions?: Institution[];
+  x_concepts?: Concept[];
+  counts_by_year?: PublicationYear[];
+  works_api_url?: string;
+  updated_date?: string;
+  created_date?: string;
 };
 
 type Ids = {

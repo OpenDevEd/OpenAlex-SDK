@@ -22,14 +22,14 @@ export type Work = {
   apc_list?: Apc_payment;
   apc_paid?: Apc_payment;
   best_oa_location?: LocationOpenAlex;
-  biblio: Biblio;
+  biblio?: Biblio;
   cited_by_api_url?: string;
   cited_by_count?: number;
   concepts?: ConceptWork[];
   corresponding_author_ids?: string[];
   corresponding_institution_ids?: string[];
   countries_distinct_count?: number;
-  counts_by_year: CountsByYear[];
+  counts_by_year?: CountsByYear[];
   created_date?: string;
   display_name?: string;
   doi?: string;

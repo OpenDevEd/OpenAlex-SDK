@@ -1,5 +1,5 @@
 import { AxiosResponse } from 'axios';
-import { GroupByAuthor } from 'src/types/author';
+import { Authors, GroupByAuthor } from 'src/types/author';
 import { AuthorFilterParameters } from 'src/types/authorFilterParameters';
 import { GroupBySource } from 'src/types/source';
 import { SourceFilterParameters } from 'src/types/sourceFilterParameters';
@@ -66,7 +66,6 @@ function filterBuilder(
       filterString = `${filterString}${key}:${filterObject[key]},`;
     }
   }
-  console.log(filterString);
   filterString = filterString.slice(0, -1);
   return filterString;
 }
@@ -168,7 +167,7 @@ export async function getCursorByPage(
 
   let new_url = appendCursorToUrl(url, cursorPage, '*', false);
 
-  let response: AxiosResponse<Works> = await GET(new_url);
+  let response: AxiosResponse<Works | Authors> = await GET(new_url);
 
   if (response.status !== 200) {
     throw new Error(`Error ${response.status}: ${response.statusText}`);
@@ -195,4 +194,36 @@ export async function getCursorByPage(
     }
   }
   return cursor;
+}
+/**
+ * The function `calculatePages` calculates the total number of pages based on the total number of works and the number of works per page.
+ * @param {number} pageSize - The `pageSize` parameter is a number that represents the number of works per page.
+ * @param {number} total - The `total` parameter is a number that represents the total number of works.
+ * @returns {number} a number that represents the total number of pages.
+ */
+export function calculatePages(pageSize: number, total: number): number {
+  const totalPages = Math.ceil(total / pageSize);
+  return totalPages;
+}
+
+/**
+ * The function `convertAbstractArrayToString` converts an abstract array to a string.
+ * @param {object} abstract - The `abstract` parameter is an object that represents the abstract array.
+ * @returns a string that represents the abstract array as a string.
+ */
+export function convertAbstractArrayToString(abstract: {
+  [key: string]: number[];
+}): string {
+  const entries = Object.entries(abstract).flatMap(([key, value]) =>
+    value.map((v) => ({ key, value: v })),
+  );
+
+  // Sort the array of objects by the value property
+  const sortedEntries = entries.sort((a, b) => a.value - b.value);
+
+  // Extract the key from each sorted object
+  const keys = sortedEntries.map((entry) => entry.key);
+
+  // Join these keys into a single string separated by spaces
+  return keys.join(' ');
 }
