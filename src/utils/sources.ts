@@ -13,7 +13,7 @@ import { GET } from './http';
  * @param {string} searchField - The `searchField` parameter is a string that represents the field to search in.
  * @throws {Error} - Throws an error if the parameters are invalid.
  */
-export function validateAuthorParameters(
+export function validateSourcesParameters(
   retriveAllPages?: boolean,
   startPage?: number,
   endPage?: number,

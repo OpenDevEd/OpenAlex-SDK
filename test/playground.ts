@@ -13,12 +13,21 @@ import OpenAlex from '../src/index';
   // });
   // // const res = await openAlex.author('A5023888391');
   // console.log(res.meta);
-  const res2 = await openAlex.authors({
+  // const res2 = await openAlex.authors({
+  //   filter: {
+  //     works_count: ['<100', '>10'],
+  //   },
+  // });
+  // console.log(res2);
+  const res = await openAlex.sources({
     filter: {
-      works_count: ['<100', '>10'],
+      is_oa: true,
+      type: 'journal',
     },
+    search: 'nature',
   });
-  console.log(res2);
+  console.log(res.meta);
+  res.results.map((r) => console.log(r.id));
   // const res4 = await openAlex.works({
   //   search: 'africa',
   //   // retriveAllPages: true,

@@ -7,7 +7,11 @@ import {
   AuthorsSearchParameters,
   ExternalIdsAuthor,
 } from './types/author';
-import { ExternalIdsSource } from './types/source';
+import {
+  ExternalIdsSource,
+  SearchParametersSource,
+  Sources,
+} from './types/source';
 import { ExternalIdsWork, SearchParameters, Work, Works } from './types/work';
 import {
   handleAllAuthorsPages,
@@ -22,6 +26,11 @@ import {
   getCursorByPage,
 } from './utils/helpers';
 import { GET } from './utils/http';
+import {
+  handleAllSourcesPages,
+  handleMultipleSourcesPages,
+  validateSourcesParameters,
+} from './utils/sources';
 import {
   handleAllPages,
   handleAllPagesInChunks,
@@ -466,6 +475,82 @@ export default class OpenAlex {
       throw new Error(`Error ${response.status}: ${response.statusText}`);
     }
   }
+  async sources(
+    searchParameters: SearchParametersSource = {
+      perPage: 25,
+      page: 1,
+      retriveAllPages: false,
+    },
+  ) {
+    const {
+      retriveAllPages,
+      searchField,
+      search,
+      toJson,
+      toCsv,
+      startPage,
+      endPage,
+      filter,
+      groupBy,
+      sortBy,
+    } = searchParameters;
+    let { perPage } = searchParameters;
+    let { page } = searchParameters;
+    validateSourcesParameters(retriveAllPages, startPage, endPage, searchField);
 
-  // async snowBalling(id: string, externalIds?: ExternalIdsWork) {}
+    let url = buildUrl(
+      this.url,
+      'sources',
+      search,
+      searchField,
+      filter,
+      groupBy,
+      sortBy,
+    );
+    let cursor = await getCursorByPage(url, page, perPage);
+    if (retriveAllPages) {
+      perPage = 200;
+      cursor = '*';
+    }
+
+    if (startPage && endPage) {
+      page = startPage;
+      cursor = await getCursorByPage(url, startPage, perPage);
+    }
+
+    url = appendCursorToUrl(url, perPage, cursor, retriveAllPages);
+
+    const response: AxiosResponse<Sources> = await GET(url);
+
+    if (response.status === 200) {
+      response.data.meta.page = page ?? 1;
+
+      if (startPage && endPage) {
+        return handleMultipleSourcesPages(
+          startPage,
+          endPage,
+          url,
+          response,
+          toJson,
+          toCsv,
+        );
+      }
+
+      if (retriveAllPages) {
+        return handleAllSourcesPages(url, response, toJson, toCsv);
+      }
+
+      if (toJson)
+        fs.writeFileSync(
+          `${toJson}.json`,
+          JSON.stringify(response.data, null, 2),
+        );
+      if (toCsv) {
+        convertToCSV(response.data.results, toCsv);
+      }
+      return response.data;
+    } else {
+      throw new Error(`Error ${response.status}: ${response.statusText}`);
+    }
+  }
 }
