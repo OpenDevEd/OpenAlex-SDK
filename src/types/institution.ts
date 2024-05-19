@@ -175,3 +175,16 @@ export type SortByInstitution = {
     | 'relevance_score';
   order: 'asc' | 'desc';
 };
+
+export type Institutions = {
+  meta: Meta;
+  results: Institution[];
+};
+type Meta = {
+  count: number;
+  db_response_time_ms: number;
+  page?: number;
+  per_page: number;
+  next_cursor: string;
+  groups_count?: number;
+};
