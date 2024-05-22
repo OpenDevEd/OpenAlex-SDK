@@ -1,6 +1,6 @@
 import { InstitutionFilterParameters } from './institutionFilterParameters';
 
-type Institution = {
+export type Institution = {
   id?: string;
   ror?: string;
   display_name?: string;

@@ -18,7 +18,7 @@ describe('get single author', () => {
       'https://api.openalex.org/authors/orcid:0000-0002-1298-3089',
     );
     expect(res).toEqual(openAlexRes.data);
-  });
+  }, 20000);
 });
 
 describe('get multiple authors', () => {

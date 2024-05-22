@@ -19,27 +19,20 @@ import OpenAlex from '../src/index';
   //   },
   // });
   // console.log(res2);
-  const res = await openAlex.sources({
-    filter: {
-      is_oa: true,
-      type: 'journal',
-    },
-    search: 'nature',
+  const res = await openAlex.institutions({
+    search: 'india',
+    retriveAllPages: true,
   });
-  console.log(res.meta);
-  res.results.map((r) => console.log(r.id));
+  console.log(res.results.length);
+  // console.log(res.results[487]);
   // const res4 = await openAlex.works({
   //   search: 'africa',
   //   // retriveAllPages: true,
   //   searchField: 'title',
   //   toCsv: 'africa',
   //   AbstractArrayToString: true,
+  //   retriveAllPages: true,
   //   // chunkSize: 25000,
-  //   filter: {
-  //     publication_year: [
-  //       2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024,
-  //     ],
-  //   },
   // });
 
   // console.log(res4.meta);
