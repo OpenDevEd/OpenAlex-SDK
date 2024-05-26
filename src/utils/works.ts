@@ -179,7 +179,16 @@ export async function handleAllPagesInChunks(
           if (!fs.existsSync(toJson)) {
             fs.mkdirSync(toJson);
           }
-
+          const workstemp = {
+            meta: works.meta,
+            results: chunk,
+          };
+          // calculate the page number based on the chunk size
+          const page = Math.floor(start / chunkSize) + 1;
+          workstemp.meta.page = page;
+          workstemp.meta.per_page = chunkSize;
+          //@ts-ignore
+          workstemp.meta.firstItem = start + 1;
           end = start + chunk.length;
           const startFormatted = formatNumber(
             Number((start + 1).toString().padStart(7, '0')),
@@ -190,7 +199,7 @@ export async function handleAllPagesInChunks(
 
           fs.writeFileSync(
             `${toJson}/${toJson}_${startFormatted}-${endFormatted}.json`,
-            JSON.stringify(chunk, null, 2),
+            JSON.stringify(workstemp, null, 2),
           );
           start = end;
         }
@@ -215,7 +224,7 @@ export async function handleAllPagesInChunks(
       }
     } else throw new Error(`Error ${response.status}: ${response.statusText}`);
   }
-  return works;
+  return;
 }
 export function formatNumber(num: number): string {
   // Pad the number to 7 digits

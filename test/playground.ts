@@ -25,17 +25,16 @@ import OpenAlex from '../src/index';
   });
   console.log(res.results.length);
   // console.log(res.results[487]);
-  // const res4 = await openAlex.works({
-  //   search: 'africa',
-  //   // retriveAllPages: true,
-  //   searchField: 'title',
-  //   toCsv: 'africa',
-  //   AbstractArrayToString: true,
-  //   retriveAllPages: true,
-  //   // chunkSize: 25000,
-  // });
+  const res4 = await openAlex.works({
+    search: 'africa',
+    searchField: 'title',
+    toJson: 'africa',
+    AbstractArrayToString: true,
+    retriveAllPages: true,
+    chunkSize: 1000,
+  });
 
-  // console.log(res4.meta);
+  console.log(res4.meta);
 
   // remove abstract and fulltext from the csv
 })();

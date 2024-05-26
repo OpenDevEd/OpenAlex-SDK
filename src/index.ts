@@ -235,7 +235,7 @@ export default class OpenAlex {
 
       if (retriveAllPages) {
         if (chunkSize)
-          return handleAllPagesInChunks(
+          handleAllPagesInChunks(
             url,
             response,
             toJson,
