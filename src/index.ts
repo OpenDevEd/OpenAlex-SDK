@@ -17,6 +17,7 @@ import {
   SearchParametersSource,
   Sources,
 } from './types/source';
+import { Topic } from './types/topic';
 import { ExternalIdsWork, SearchParameters, Work, Works } from './types/work';
 import {
   handleAllAuthorsPages,
@@ -654,6 +655,17 @@ export default class OpenAlex {
       if (toCsv) {
         convertToCSV(response.data.results, toCsv);
       }
+      return response.data;
+    } else {
+      throw new Error(`Error ${response.status}: ${response.statusText}`);
+    }
+  }
+  async topic(id: string) {
+    if (!id) throw new Error('Topic id is required');
+    const response: AxiosResponse<Topic> = await GET(
+      `${this.url}/topics/${id}`,
+    );
+    if (response.status === 200) {
       return response.data;
     } else {
       throw new Error(`Error ${response.status}: ${response.statusText}`);
