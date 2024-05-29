@@ -40,3 +40,63 @@ export type Topics = {
   meta: Meta;
   topics: Topic[];
 };
+
+export type SearchParametersTopics = {
+  search?: string;
+  searchField?: SearchFieldTopics;
+  perPage?: number;
+  page?: number;
+  retriveAllPages?: boolean;
+  toCsv?: string;
+  toJson?: string;
+  startPage?: number;
+  filter?: FilterParametersTopics;
+  endPage?: number;
+  groupBy?: GroupByTopics;
+  sortBy?: SortByTopics;
+  AbstractArrayToString?: boolean;
+};
+
+type SearchFieldTopics = 'display_name' | 'description' | 'keywords';
+export type FilterParametersTopics = {
+  cited_by_count?: string | string[];
+  domain:
+    | {
+        id: number;
+      }
+    | { id: number }[];
+  fields:
+    | {
+        id: number;
+      }
+    | { id: number }[];
+  ids:
+    | {
+        openalex: number;
+      }
+    | { openalex: number }[];
+  subfield:
+    | {
+        id: number;
+      }
+    | { id: number }[];
+  works_count?: string | string[];
+};
+
+export type GroupByTopics =
+  | 'cited_by_count'
+  | 'domain.id'
+  | 'fields.id'
+  | 'subfield.id'
+  | 'works_count';
+
+export type SortByTopics = {
+  field:
+    | 'display_name'
+    | 'cited_by_count'
+    | 'works_count'
+    | 'publication_date'
+    /**  relevance_score (only exists if there's a search filter active) */
+    | 'relevance_score';
+  order: 'asc' | 'desc';
+};
