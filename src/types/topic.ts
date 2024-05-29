@@ -16,7 +16,7 @@ type Domain = {
   display_name: string;
 };
 
-export type Field = {
+type Field = {
   id: number;
   display_name: string;
 };
@@ -27,4 +27,16 @@ type Ids = {
 type SubField = {
   id: number;
   display_name: string;
+};
+type Meta = {
+  count: number;
+  db_response_time_ms: number;
+  page?: number;
+  per_page: number;
+  next_cursor: string;
+  groups_count?: number;
+};
+export type Topics = {
+  meta: Meta;
+  topics: Topic[];
 };
