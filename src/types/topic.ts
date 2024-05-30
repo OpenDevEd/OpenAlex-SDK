@@ -38,7 +38,13 @@ type Meta = {
 };
 export type Topics = {
   meta: Meta;
-  topics: Topic[];
+  results: Topic[];
+  group_by?: GroupBy[];
+};
+type GroupBy = {
+  key: string;
+  key_display_name: string;
+  count: number;
 };
 
 export type SearchParametersTopics = {
@@ -50,7 +56,7 @@ export type SearchParametersTopics = {
   toCsv?: string;
   toJson?: string;
   startPage?: number;
-  filter?: FilterParametersTopics;
+  filter?: TopicsFilterParameters;
   endPage?: number;
   groupBy?: GroupByTopics;
   sortBy?: SortByTopics;
@@ -58,24 +64,24 @@ export type SearchParametersTopics = {
 };
 
 type SearchFieldTopics = 'display_name' | 'description' | 'keywords';
-export type FilterParametersTopics = {
+export type TopicsFilterParameters = {
   cited_by_count?: string | string[];
-  domain:
+  domain?:
     | {
         id: number;
       }
     | { id: number }[];
-  fields:
+  fields?:
     | {
         id: number;
       }
     | { id: number }[];
-  ids:
+  ids?:
     | {
         openalex: number;
       }
     | { openalex: number }[];
-  subfield:
+  subfield?:
     | {
         id: number;
       }

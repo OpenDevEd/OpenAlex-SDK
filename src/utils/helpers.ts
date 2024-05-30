@@ -3,6 +3,7 @@ import { Authors, GroupByAuthor } from 'src/types/author';
 import { AuthorFilterParameters } from 'src/types/authorFilterParameters';
 import { GroupBySource } from 'src/types/source';
 import { SourceFilterParameters } from 'src/types/sourceFilterParameters';
+import { GroupByTopics, TopicsFilterParameters } from 'src/types/topic';
 import { GroupByWorks, SortByWork, Works } from 'src/types/work';
 import { WorkFilterParameters } from 'src/types/workFilterParameters';
 import { GroupByInstitution } from '../types/institution';
@@ -14,22 +15,28 @@ import { GET } from './http';
  * @param {string} baseUrl - The `baseUrl` parameter is a string that represents the base URL.
  * @param {string} search - The `search` parameter is a string that represents the search query.
  * @param {string} searchField - The `searchField` parameter is a string that represents the field to search in.
- * @param {WorkFilterParameters | AuthorFilterParameters | SourceFilterParameters | InstitutionFilterParameters} filter - The `filter` parameter is an object that represents the filter parameters.
+ * @param {WorkFilterParameters | AuthorFilterParameters | SourceFilterParameters | InstitutionFilterParameters | TopicsFilterParameters} filter - The `filter` parameter is an object that represents the filter parameters.
  * @param {GroupByWorks} group_by - The `group_by` parameter is a string that represents the field to group by.
  * @param {SortByWork} sortBy - The `sortBy` parameter is an object that represents the sort parameters.
  * @returns {string} a string that represents the URL.
  */
 export function buildUrl(
   baseUrl: string,
-  endPoints: 'works' | 'authors' | 'sources' | 'institutions',
+  endPoints: 'works' | 'authors' | 'sources' | 'institutions' | 'topics',
   search?: string,
   searchField?: string,
   filter?:
     | WorkFilterParameters
     | AuthorFilterParameters
     | SourceFilterParameters
-    | InstitutionFilterParameters,
-  group_by?: GroupByWorks | GroupBySource | GroupByAuthor | GroupByInstitution,
+    | InstitutionFilterParameters
+    | TopicsFilterParameters,
+  group_by?:
+    | GroupByWorks
+    | GroupBySource
+    | GroupByAuthor
+    | GroupByInstitution
+    | GroupByTopics,
   sortBy?: SortByWork,
 ): string {
   let filterParams = '';
@@ -58,7 +65,8 @@ function filterBuilder(
     | WorkFilterParameters
     | AuthorFilterParameters
     | SourceFilterParameters
-    | InstitutionFilterParameters,
+    | InstitutionFilterParameters
+    | TopicsFilterParameters,
 ) {
   let filterString = '';
   const filterObject = getPaths(filter);
