@@ -114,6 +114,11 @@ export type SortBySource = {
     | 'relevance_score';
   order: 'asc' | 'desc';
 };
+type ResultsGroupBy = {
+  key: string;
+  key_display_name: string;
+  count: number;
+};
 
 export type ExternalIdsSource = 'issn' | 'fatcat' | 'mag' | 'wikidata';
 type Meta = {
@@ -127,4 +132,5 @@ type Meta = {
 export type Sources = {
   results: Source[];
   meta: Meta;
+  group_by?: ResultsGroupBy[];
 };

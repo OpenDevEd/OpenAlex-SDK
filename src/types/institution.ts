@@ -177,10 +177,15 @@ export type SortByInstitution = {
     | 'relevance_score';
   order: 'asc' | 'desc';
 };
-
+type ResultsGroupBy = {
+  key: string;
+  key_display_name: string;
+  count: number;
+};
 export type Institutions = {
   meta: Meta;
   results: Institution[];
+  group_by?: ResultsGroupBy[];
 };
 type Meta = {
   count: number;

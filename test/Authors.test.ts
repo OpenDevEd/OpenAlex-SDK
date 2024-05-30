@@ -174,7 +174,7 @@ describe('get multiple authors', () => {
     const openAlexRes = await axios.get(
       'https://api.openalex.org/authors?group_by=works_count',
     );
-    expect(res.results).toEqual(openAlexRes.data.results);
+    expect(res.group_by?.length).toEqual(openAlexRes.data.group_by.length);
   }, 10000);
   // get authors with group by and filter
   test('get authors with group by and filter', async () => {
@@ -188,7 +188,7 @@ describe('get multiple authors', () => {
     const openAlexRes = await axios.get(
       'https://api.openalex.org/authors?group_by=works_count&filter=works_count:<100|>10',
     );
-    expect(res.results).toEqual(openAlexRes.data.results);
+    expect(res.group_by?.length).toEqual(openAlexRes.data.group_by.length);
   }, 10000);
   // get authors with sort by
   test('get authors with sort by', async () => {

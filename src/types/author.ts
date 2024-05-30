@@ -54,10 +54,15 @@ type PublicationYear = {
   works_count: number;
   cited_by_count: number;
 };
-
+type ResultsGroupBy = {
+  key: string;
+  key_display_name: string;
+  count: number;
+};
 export type Authors = {
   results: Author[];
   meta: Meta;
+  group_by?: ResultsGroupBy[];
 };
 
 type Meta = {

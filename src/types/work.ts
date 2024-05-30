@@ -241,7 +241,7 @@ export type TypeCrossRef =
   | 'book-series'
   | 'edited-book';
 
-type TypeOpenAlex = {
+type ResultsGroupBy = {
   key: KeyTypeOpenAlex;
   key_display_name: KeyDisplayNameType;
   count: number;
@@ -256,7 +256,7 @@ export type Works = {
     next_cursor: string;
   };
   results: Work[];
-  group_by?: TypeOpenAlex[];
+  group_by?: ResultsGroupBy[];
 };
 export type SearchParameters = {
   search?: string;
